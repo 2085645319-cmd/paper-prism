@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.2.0",
   "type": "module",
-  "description": "PRISM 鈥?multi-agent literature intelligence for research writing",
+  "description": "PRISM - multi-agent literature intelligence for research writing",
   "scripts": {
     "dev": "node server/index.mjs",
     "dev:client": "vite",
