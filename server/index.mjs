@@ -109,7 +109,7 @@ app.use((error, _req, res, _next) => {
   res.status(500).json({ error: '服务器出现异常，请稍后重试。' });
 });
 
-app.listen(CONFIG.port, '127.0.0.1', () => {
-  console.log(`[prism] http://127.0.0.1:${CONFIG.port}`);
+app.listen(CONFIG.port, CONFIG.host, () => {
+  console.log(`[prism] http://${CONFIG.host}:${CONFIG.port}`);
   console.log(`[prism] model=${CONFIG.deepseekModel} llm=${hasLLM() ? 'ready' : 'missing key (heuristic mode)'}`);
 });

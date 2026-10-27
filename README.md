@@ -115,6 +115,36 @@ npm run dev:client
 
 Vite 开发地址是 `http://127.0.0.1:5173`，`/api` 会代理到 `127.0.0.1:8790`。
 
+### 在线部署
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/2085645319-cmd/paper-prism)
+
+推荐用 **Render** 的免费 Web Service：
+
+1. 点击上面的 **Deploy to Render**，登录并授权 GitHub
+2. 选择 Free plan
+3. 在环境变量里填 `DEEPSEEK_API_KEY`
+4. Deploy
+
+`render.yaml` 已声明：
+
+- `HOST=0.0.0.0`（云端必须监听所有网卡）
+- `NODE_VERSION=24`
+- build：`npm ci && npm run build`
+- start：`npm start`
+- health check：`/api/health`
+
+免费实例闲置后会休眠，首次打开需要冷启动；需要稳定在线可以升级 Render 付费实例，或用 Railway / Fly.io / VPS。
+
+也提供了 Dockerfile：
+
+```bash
+docker build -t prism .
+docker run -p 8790:8790 -e DEEPSEEK_API_KEY=你的Key prism
+```
+
+> GitHub Pages 只能托管静态文件，不能运行这个项目的 Express + SSE + DeepSeek 后端。
+
 ## 目录
 
 ```text

@@ -40,6 +40,7 @@ function deepSeekKeyFromDshHome() {
 
 export const CONFIG = {
   port: Number(process.env.PORT || 8790),
+  host: process.env.HOST || '127.0.0.1',
   deepseekBaseUrl: (process.env.DEEPSEEK_BASE_URL || 'https://api.deepseek.com').replace(/\/$/, ''),
   deepseekModel: process.env.DEEPSEEK_MODEL || 'deepseek-chat',
   deepseekKey: process.env.DEEPSEEK_API_KEY || deepSeekKeyFromDshHome(),
