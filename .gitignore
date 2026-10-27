@@ -1,0 +1,11 @@
+node_modules
+dist
+.env
+*.log
+.DS_Store
+
+# Generated demos and screenshots: keep only the images used by the README.
+artifacts/*
+!artifacts/results.png
+!artifacts/graph.png
+!artifacts/palette-research.png
