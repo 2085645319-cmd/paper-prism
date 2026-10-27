@@ -1,5 +1,7 @@
 # PRISM
 
+[![build](https://github.com/2085645319-cmd/paper-prism/actions/workflows/ci.yml/badge.svg)](https://github.com/2085645319-cmd/paper-prism/actions/workflows/ci.yml)
+
 **面向论文写作的文献智能。**  
 输入一个研究课题，PRISM 用多智能体把检索、阅读、归纳和引用复核串成一条可追踪的研究链，输出一份能直接带进写作的文献简报。
 
