@@ -1,0 +1,17 @@
+name: keepalive
+
+on:
+  schedule:
+    # Keep the Render free instance from spinning down.
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping PRISM health endpoint
+        run: |
+          curl -fsS --max-time 120 \
+            --retry 3 --retry-delay 15 --retry-connrefused \
+            https://prism-7z6p.onrender.com/api/health

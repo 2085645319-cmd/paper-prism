@@ -7,6 +7,8 @@
 
 > MVP 0.2 · React + Vite · Node/Express · DeepSeek API · Semantic Scholar / DOAJ / Crossref
 
+**在线体验：** https://prism-7z6p.onrender.com
+
 ## Preview
 
 ![PRISM literature brief](artifacts/results.png)
