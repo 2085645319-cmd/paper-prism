@@ -4,6 +4,7 @@ import express from 'express';
 import { CONFIG, DIST_DIR, hasLLM } from './config.mjs';
 import { createJob, getJob } from './lib/jobs.mjs';
 import { runResearch } from './agents/orchestrator.mjs';
+import { translateAbstract } from './lib/translate.mjs';
 
 const app = express();
 app.disable('x-powered-by');
@@ -20,6 +21,20 @@ function allow(ip) {
   }
   entries.push(now);
   rate.set(ip, entries);
+  return true;
+}
+
+const translateRate = new Map();
+function allowTranslate(ip) {
+  const now = Date.now();
+  const windowStart = now - 60_000;
+  const entries = (translateRate.get(ip) || []).filter(ts => ts > windowStart);
+  if (entries.length >= 20) {
+    translateRate.set(ip, entries);
+    return false;
+  }
+  entries.push(now);
+  translateRate.set(ip, entries);
   return true;
 }
 
@@ -56,8 +71,7 @@ app.get('/api/research/:id', (req, res) => {
   res.json(job.snapshot());
 });
 
-app.get('/api/research/:id/events', (req, res) => {
-  const job = getJob(req.params.id);
+app.get('/api/research/:id/events', (req, res) => {  const job = getJob(req.params.id);
   if (!job) return res.status(404).json({ error: '未找到该研究任务。' });
 
   res.writeHead(200, {
@@ -87,6 +101,26 @@ app.get('/api/research/:id/events', (req, res) => {
     clearInterval(heartbeat);
     unsubscribe();
   });
+});
+
+app.post('/api/translate', async (req, res) => {
+  const text = String(req.body?.text || '').trim();
+  if (text.length < 40) {
+    return res.status(400).json({ error: '摘要太短，无法翻译。' });
+  }
+  if (text.length > 7000) {
+    return res.status(400).json({ error: '摘要太长，请打开原文阅读。' });
+  }
+  if (!allowTranslate(req.ip || 'local')) {
+    return res.status(429).json({ error: '摘要翻译过于频繁，请稍后再试。' });
+  }
+  try {
+    const translation = await translateAbstract(text);
+    res.json({ translation });
+  } catch (error) {
+    const status = /未配置|not configured/i.test(String(error.message)) ? 503 : 502;
+    res.status(status).json({ error: error.message || '摘要翻译失败。' });
+  }
 });
 
 app.use('/api', (_req, res) => {

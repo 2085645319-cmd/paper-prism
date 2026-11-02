@@ -41,3 +41,14 @@ export async function getSnapshot(id: string): Promise<{ status: string; events:
   if (!response.ok) throw new Error('无法加载研究任务。');
   return response.json();
 }
+
+export async function translateAbstract(text: string): Promise<string> {
+  const response = await fetch('/api/translate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text })
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error || '摘要翻译失败。');
+  return String(data.translation || '');
+}

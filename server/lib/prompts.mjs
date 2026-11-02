@@ -11,6 +11,7 @@ Schema:
 
 Rules:
 - Produce exactly 5 queries. Mix a broad field query, a methods query, a challenge/limitation query, an evaluation/benchmark query and a recent-frontier query.
+- Prefer queries that surface work from the last five years; make at least one query explicitly target the current year.
 - Queries are plain keyword strings for scholarly APIs. No Boolean operators, no site: operators, no quotes.
 - Use English for search queries even when the topic is Chinese, but keep established technical names.
 - If the topic contains Chinese characters, the field label, every dimensions[].name and every dimensions[].question MUST be written in Chinese. Never answer those fields in English. Only topic_en and queries stay in English.
@@ -19,6 +20,7 @@ Rules:
 
 export function plannerUser(topic) {
   return `Research topic: ${topic}
+Current year: ${new Date().getFullYear()}
 
 Build the search plan. Return JSON only.`;
 }

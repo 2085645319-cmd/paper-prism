@@ -35,6 +35,29 @@ function contextTerms(plan) {
   return tokenize([plan.topic_en, plan.field, ...(plan.queries || [])].join(' '));
 }
 
+const GENERIC_TOPIC_TERMS = new Set([
+  'large', 'language', 'languages', 'model', 'models', 'system', 'systems',
+  'using', 'based', 'approach', 'approaches', 'method', 'methods', 'analysis',
+  'research', 'paper', 'study', 'studies', 'novel', 'new', 'toward', 'towards'
+]);
+
+function topicAnchors(plan) {
+  if (!plan?.topic_en) return [];
+  return [...tokenize(plan.topic_en)]
+    .filter(term => term.length >= 5 && !GENERIC_TOPIC_TERMS.has(term))
+    .slice(0, 6);
+}
+
+function anchorHits(paper, anchors) {
+  if (!anchors.length) return 0;
+  const title = tokenize(paper.title || '');
+  const haystack = tokenize(`${paper.title || ''} ${paper.abstract || ''}`);
+  const total = anchors.filter(anchor => haystack.has(anchor)).length;
+  // Prefer papers whose title itself signals the topic. Generic titles are
+  // allowed only through the pool fallback when too few anchored papers exist.
+  return anchors.some(anchor => title.has(anchor)) ? total : 0;
+}
+
 function relevance(paper, terms) {
   if (!terms.size) return 0;
   const title = tokenize(paper.title);
@@ -88,27 +111,69 @@ export function mergePapers(rawPapers) {
 function scorePaper(paper, terms) {
   const citations = Math.max(0, paper.citations || 0);
   const year = paper.year || 0;
-  const age = year ? new Date().getFullYear() - year : 8;
-  const recency = Math.max(0, 3.2 - age * 0.28);
-  const abstract = paper.abstract ? Math.min(1.8, paper.abstract.length / 900) : 0;
+  const currentYear = new Date().getFullYear();
+  const age = year ? Math.max(0, currentYear - year) : 8;
+  // Evidence-first ranking: recent work and usable abstracts matter more than
+  // raw citation counts, which otherwise keep old papers at the top forever.
+  const recency = year ? Math.max(0, 4.4 - age * 0.38) : 0;
+  const abstractLength = String(paper.abstract || '').trim().length;
+  const abstract = abstractLength >= 80 ? Math.min(2.4, abstractLength / 800) : 0;
   const sources = paper.sources ? paper.sources.size : 1;
-  return Math.log1p(citations) * 1.8 + recency * 0.8 + abstract * 0.8 + Math.min(1.2, sources * 0.35) + relevance(paper, terms) * 2.4;
+  return Math.log1p(citations) * 1.05 + recency * 1.9 + abstract * 2.4 + Math.min(1.2, sources * 0.35) + relevance(paper, terms) * 2.6;
+}
+
+function hasUsableAbstract(paper) {
+  return String(paper.abstract || '').trim().length >= 80;
+}
+
+function isRecent(paper, currentYear = new Date().getFullYear()) {
+  return Boolean(paper.year) && currentYear - paper.year <= 5;
 }
 
 export function rankAndSelect(rawPapers, max = 18, plan = null) {
   const merged = mergePapers(rawPapers);
   const terms = contextTerms(plan);
+  const anchors = topicAnchors(plan);
+  const currentYear = new Date().getFullYear();
   const scored = merged
     .map(paper => ({ ...paper, _score: scorePaper(paper, terms) }))
     .sort((a, b) => b._score - a._score);
 
-  // Keep the head of the ranking but guarantee a few recent papers.
-  const selected = scored.slice(0, max);
-  const recent = scored.filter(p => p.year && new Date().getFullYear() - p.year <= 3);
-  for (const paper of recent.slice(0, 4)) {
-    if (!selected.includes(paper)) {
-      const replaceAt = selected.map(p => p.year || 0).lastIndexOf(Math.min(...selected.map(p => p.year || 0)));
-      if (replaceAt >= 0) selected.splice(replaceAt, 1, paper);
+  // Avoid filling the corpus with generic "large language model" work when the
+  // topic is more specific. Keep a broad fallback if the anchor filter is too strict.
+  const requiredAnchors = Math.min(2, anchors.length);
+  const anchored = requiredAnchors
+    ? scored.filter(paper => anchorHits(paper, anchors) >= requiredAnchors)
+    : scored;
+  const pool = anchored.length >= Math.min(max, 10) ? anchored : scored;
+
+  // Select in evidence-priority order:
+  // 1) recent + abstract, 2) any abstract, 3) recent, 4) remaining head.
+  // This keeps the corpus recent and maximizes abstract coverage, while the
+  // score still decides the order within each bucket.
+  const selected = [];
+  const chosen = new Set();
+  const take = predicate => {
+    for (const paper of pool) {
+      if (selected.length >= max) return;
+      if (chosen.has(paper) || !predicate(paper)) continue;
+      selected.push(paper);
+      chosen.add(paper);
+    }
+  };
+  take(paper => hasUsableAbstract(paper) && isRecent(paper, currentYear));
+  take(paper => hasUsableAbstract(paper));
+  take(paper => isRecent(paper, currentYear));
+  take(() => true);
+
+  // If the anchor pool was smaller than max, fill the remaining slots from the
+  // full ranked list rather than returning a short corpus.
+  if (selected.length < max) {
+    for (const paper of scored) {
+      if (selected.length >= max) break;
+      if (chosen.has(paper)) continue;
+      selected.push(paper);
+      chosen.add(paper);
     }
   }
 

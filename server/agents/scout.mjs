@@ -9,19 +9,19 @@ const SOURCES = [
     id: 'semanticscholar',
     name: 'Semantic Scholar',
     role: 'Citation-aware research graph',
-    run: query => searchSemanticScholar(query, 30)
+    run: query => searchSemanticScholar(query, 40)
   },
   {
     id: 'doaj',
     name: 'DOAJ',
     role: 'Open-access journals',
-    run: query => searchDoaj(query, 10)
+    run: query => searchDoaj(query, 15)
   },
   {
     id: 'crossref',
     name: 'Crossref',
     role: 'DOI metadata backbone',
-    run: query => searchCrossref(query, 10)
+    run: query => searchCrossref(query, 15)
   }
 ];
 

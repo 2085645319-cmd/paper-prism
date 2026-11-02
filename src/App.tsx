@@ -340,6 +340,7 @@ export default function App() {
     setRunning(false);
     setView('home');
     setJobId('');
+    if (!DEMO) setTopic('');
     setSelectedPaper(null);
     setTimeout(() => document.getElementById('topic-input')?.focus(), 60);
   };
@@ -407,7 +408,7 @@ export default function App() {
         { id: 'copy', group: '操作', label: '复制研究课题', hint: activeTopic, shortcut: 'C', icon: 'copy', run: copyTopic },
         { id: 'first-paper', group: '操作', label: '打开第一篇文献', hint: papers[0]?.title || '暂无文献', icon: 'external', disabled: !papers.length, run: () => papers[0] && setSelectedPaper(papers[0]) },
         { id: 'run-id', group: '操作', label: '复制研究编号', hint: jobId || '暂无研究', icon: 'command', disabled: !jobId, run: async () => { try { await navigator.clipboard.writeText(jobId); setToast(`研究编号 ${jobId} 已复制`); } catch { setToast('当前浏览器不允许访问剪贴板'); } } },
-        { id: 'new', group: '操作', label: '新研究', hint: '离开当前研究，重新开始', shortcut: 'N', icon: 'plus', run: goHome }
+        { id: 'new', group: '操作', label: DEMO ? '新研究' : '开启新对话', hint: '离开当前研究，重新开始', shortcut: 'N', icon: 'plus', run: goHome }
       ];
 
 
@@ -459,7 +460,7 @@ export default function App() {
             </span>
             {DEMO && <span className="demo-chip">本地预置数据</span>}
             <button type="button" className="secondary-button small" onClick={goHome}>
-              <Icon name="plus" size={13} /> 新研究
+              <Icon name="plus" size={13} /> {DEMO ? '新研究' : '开启新对话'}
             </button>
           </div>
         )}
@@ -583,7 +584,7 @@ export default function App() {
                 <Icon name="download" size={13} /> 导出 .md
               </button>
               <button type="button" className="secondary-button small" onClick={goHome}>
-                <Icon name="plus" size={13} /> 新建
+                <Icon name="plus" size={13} /> {DEMO ? '新建' : '开启新对话'}
               </button>
             </div>
           </section>
@@ -627,7 +628,14 @@ export default function App() {
               </div>
               <div className="tab-panel">
                 {tab === 'brief' && <BriefView brief={brief} analysis={analysis} quality={quality} papers={papers} onCite={setSelectedPaper} />}
-                {tab === 'papers' && <PapersView papers={papers} onOpen={setSelectedPaper} />}
+                {tab === 'papers' && (
+                  <PapersView
+                    papers={papers}
+                    onOpen={setSelectedPaper}
+                    readingPath={brief?.readingPath.map(item => item.paperId) || []}
+                    fullMode={!DEMO}
+                  />
+                )}
                 {tab === 'graph' && <KnowledgeGraph papers={papers} themes={analysis?.themes || []} onSelectPaper={setSelectedPaper} />}
                 {tab === 'trace' && <TraceView entries={trace} />}
               </div>
@@ -637,7 +645,15 @@ export default function App() {
       )}
 
       {selectedPaper && (
-        <PaperDrawer paper={selectedPaper} insight={insight} onClose={() => setSelectedPaper(null)} />
+        <PaperDrawer
+          paper={selectedPaper}
+          insight={insight}
+          onClose={() => setSelectedPaper(null)}
+          coverage={quality?.abstractCoverage ?? null}
+          paperCount={papers.length}
+          showCoverage={!DEMO}
+          enableTranslation={!DEMO}
+        />
       )}
       <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} commands={paletteCommands} />
       {toast && <div className="toast" role="status" aria-live="polite">{toast}</div>}

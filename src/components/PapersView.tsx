@@ -3,13 +3,31 @@ import type { Paper } from '../types';
 import { Icon } from './Icon';
 import { PaperCard } from './PaperCard';
 
-export function PapersView({ papers, onOpen }: { papers: Paper[]; onOpen: (paper: Paper) => void }) {
+export function PapersView({
+  papers,
+  onOpen,
+  readingPath = [],
+  fullMode = false
+}: {
+  papers: Paper[];
+  onOpen: (paper: Paper) => void;
+  readingPath?: string[];
+  fullMode?: boolean;
+}) {
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState<'signal' | 'citations' | 'year'>('signal');
   const [source, setSource] = useState('all');
   const [openOnly, setOpenOnly] = useState(false);
 
   const sources = useMemo(() => [...new Set(papers.flatMap(paper => paper.sources))], [papers]);
+  const readingPathSet = useMemo(() => new Set(readingPath), [readingPath]);
+  const featuredRanks = useMemo(() => {
+    if (!fullMode) return new Map<string, number>();
+    const orderedIds = readingPath.length
+      ? readingPath.slice(0, 3)
+      : [...papers].sort((a, b) => b.signal - a.signal).slice(0, 3).map(paper => paper.id);
+    return new Map(orderedIds.map((id, index) => [id, index + 1]));
+  }, [papers, readingPath, fullMode]);
 
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -48,7 +66,7 @@ export function PapersView({ papers, onOpen }: { papers: Paper[]; onOpen: (paper
               className={`toolbar-chip ${sort === value ? 'active' : ''}`}
               onClick={() => setSort(value)}
             >
-              {value === 'signal' ? '信号' : value === 'citations' ? '引用' : '最新'}
+              {value === 'signal' ? (fullMode ? '精读价值' : '信号') : value === 'citations' ? '引用' : '最新'}
             </button>
           ))}
         </div>
@@ -65,9 +83,26 @@ export function PapersView({ papers, onOpen }: { papers: Paper[]; onOpen: (paper
         <span className="papers-count">{filtered.length}/{papers.length}</span>
       </div>
 
+      {fullMode && (
+        <div className="papers-pick-hint">
+          <span className="paper-pick rank-1">首选精读</span>
+          <span className="paper-pick rank-2">精读优先</span>
+          <span><i className="hint-dot" /> 按精读价值排序，金色标记为最值得先读的 3 篇</span>
+        </div>
+      )}
+
       {filtered.length ? (
         <div className="paper-grid">
-          {filtered.map(paper => <PaperCard key={paper.id} paper={paper} onOpen={onOpen} />)}
+          {filtered.map(paper => (
+            <PaperCard
+              key={paper.id}
+              paper={paper}
+              onOpen={onOpen}
+              featuredRank={featuredRanks.get(paper.id)}
+              inReadingPath={readingPathSet.has(paper.id)}
+              fullMode={fullMode}
+            />
+          ))}
         </div>
       ) : (
         <div className="empty-state">

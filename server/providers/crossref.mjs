@@ -18,10 +18,12 @@ function yearOf(item) {
   return null;
 }
 
-export async function searchCrossref(query, limit = 10) {
+export async function searchCrossref(query, limit = 15) {
+  const currentYear = new Date().getFullYear();
   const params = new URLSearchParams({
     'query.bibliographic': query,
     rows: String(limit),
+    filter: `from-pub-date:${currentYear - 5}-01-01`,
     select: 'DOI,title,author,issued,container-title,abstract,is-referenced-by-count,URL,type,publisher',
     mailto: CONFIG.contactEmail
   });
