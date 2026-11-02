@@ -1,4 +1,4 @@
-import type { ChatReply, PrismEvent, ResearchResult } from './types';
+import type { ChatReply, PrismEvent, ResearchOptions, ResearchResult } from './types';
 
 export async function getHealth(): Promise<{ ok: boolean; llm: boolean; model: string; sources: string[] }> {
   const response = await fetch('/api/health');
@@ -6,11 +6,11 @@ export async function getHealth(): Promise<{ ok: boolean; llm: boolean; model: s
   return response.json();
 }
 
-export async function startResearch(topic: string): Promise<{ id: string }> {
+export async function startResearch(topic: string, options?: ResearchOptions): Promise<{ id: string }> {
   const response = await fetch('/api/research', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ topic })
+    body: JSON.stringify({ topic, options })
   });
   const data = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(data.error || '无法启动研究任务。');

@@ -130,47 +130,55 @@ function isRecent(paper, currentYear = new Date().getFullYear()) {
   return Boolean(paper.year) && currentYear - paper.year <= 5;
 }
 
-export function rankAndSelect(rawPapers, max = 18, plan = null) {
+export function rankAndSelect(rawPapers, max = 18, plan = null, options = {}) {
   const merged = mergePapers(rawPapers);
   const terms = contextTerms(plan);
   const anchors = topicAnchors(plan);
   const currentYear = new Date().getFullYear();
+  const effectiveMax = Math.min(40, Math.max(1, Number(options.maxPapers) || max));
+  const yearPreset = options.yearPreset || 'recent5';
+  const yearFrom = Number(options.yearFrom) || (yearPreset === 'all' ? 1900 : currentYear - 4);
+  const yearTo = Number(options.yearTo) || currentYear;
+  const requireAbstract = options.requireAbstract === true;
+  const includeClassics = options.includeClassics === true && yearPreset !== 'all';
+  const requiredAnchors = Math.min(2, anchors.length);
+
   const scored = merged
     .map(paper => ({ ...paper, _score: scorePaper(paper, terms) }))
     .sort((a, b) => b._score - a._score);
 
-  // Avoid filling the corpus with generic "large language model" work when the
-  // topic is more specific. Keep a broad fallback if the anchor filter is too strict.
-  const requiredAnchors = Math.min(2, anchors.length);
+  const inWindow = paper => Boolean(paper.year) && paper.year >= yearFrom && paper.year <= yearTo;
+  const base = scored.filter(paper => {
+    if (!inWindow(paper)) return false;
+    if (requireAbstract && !hasUsableAbstract(paper)) return false;
+    return true;
+  });
   const anchored = requiredAnchors
-    ? scored.filter(paper => anchorHits(paper, anchors) >= requiredAnchors)
-    : scored;
-  const pool = anchored.length >= Math.min(max, 10) ? anchored : scored;
+    ? base.filter(paper => anchorHits(paper, anchors) >= requiredAnchors)
+    : base;
+  const pool = anchored.length >= Math.min(effectiveMax, 8) ? anchored : base;
 
-  // Select in evidence-priority order:
-  // 1) recent + abstract, 2) any abstract, 3) recent, 4) remaining head.
-  // This keeps the corpus recent and maximizes abstract coverage, while the
-  // score still decides the order within each bucket.
-  const selected = [];
-  const chosen = new Set();
-  const take = predicate => {
+  const classicPool = includeClassics
+    ? scored.filter(paper => {
+        if (!paper.year || paper.year >= yearFrom) return false;
+        if (paper.year < yearFrom - 20) return false;
+        if (requireAbstract && !hasUsableAbstract(paper)) return false;
+        return !requiredAnchors || anchorHits(paper, anchors) >= requiredAnchors;
+      }).slice(0, 2)
+    : [];
+
+  const recentSlots = Math.max(0, effectiveMax - classicPool.length);
+  const selected = pool.slice(0, recentSlots);
+  const chosen = new Set(selected);
+  for (const paper of classicPool) {
+    if (selected.length >= effectiveMax) break;
+    if (chosen.has(paper)) continue;
+    selected.push(paper);
+    chosen.add(paper);
+  }
+  if (selected.length < effectiveMax) {
     for (const paper of pool) {
-      if (selected.length >= max) return;
-      if (chosen.has(paper) || !predicate(paper)) continue;
-      selected.push(paper);
-      chosen.add(paper);
-    }
-  };
-  take(paper => hasUsableAbstract(paper) && isRecent(paper, currentYear));
-  take(paper => hasUsableAbstract(paper));
-  take(paper => isRecent(paper, currentYear));
-  take(() => true);
-
-  // If the anchor pool was smaller than max, fill the remaining slots from the
-  // full ranked list rather than returning a short corpus.
-  if (selected.length < max) {
-    for (const paper of scored) {
-      if (selected.length >= max) break;
+      if (selected.length >= effectiveMax) break;
       if (chosen.has(paper)) continue;
       selected.push(paper);
       chosen.add(paper);

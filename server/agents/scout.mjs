@@ -9,19 +9,19 @@ const SOURCES = [
     id: 'semanticscholar',
     name: 'Semantic Scholar',
     role: 'Citation-aware research graph',
-    run: query => searchSemanticScholar(query, 40)
+    run: (query, options) => searchSemanticScholar(query, 40, options)
   },
   {
     id: 'doaj',
     name: 'DOAJ',
     role: 'Open-access journals',
-    run: query => searchDoaj(query, 15)
+    run: (query, options) => searchDoaj(query, 15, options)
   },
   {
     id: 'crossref',
     name: 'Crossref',
     role: 'DOI metadata backbone',
-    run: query => searchCrossref(query, 15)
+    run: (query, options) => searchCrossref(query, 15, options)
   }
 ];
 
@@ -35,7 +35,13 @@ async function runSource(source, plan, job) {
   });
 
   try {
-    const records = await source.run(query);
+    const sourceOptions = { ...(job.options || {}) };
+    if (sourceOptions.includeClassics && sourceOptions.yearFrom) {
+      // Fetch a wider window so the ranking layer can reserve 1–2 older
+      // foundational papers without polluting the recent corpus.
+      sourceOptions.yearFrom = Math.max(1900, sourceOptions.yearFrom - 20);
+    }
+    const records = await source.run(query, sourceOptions);
     const ms = now() - started;
     job.emit('stage', {
       id: source.id,
@@ -59,7 +65,22 @@ async function runSource(source, plan, job) {
 }
 
 export async function runScouts({ plan, job }) {
-  const results = await Promise.all(SOURCES.map(source => runSource(source, plan, job)));
+  const enabled = new Set(job.options?.sources || SOURCES.map(source => source.id));
+  const results = await Promise.all(SOURCES.map(source => {
+    if (!enabled.has(source.id)) {
+      return Promise.resolve({
+        id: source.id,
+        name: source.name,
+        role: source.role,
+        status: 'skipped',
+        count: 0,
+        ms: 0,
+        error: '本次研究未启用该来源',
+        papers: []
+      });
+    }
+    return runSource(source, plan, job);
+  }));
   const papers = results.flatMap(result => result.papers);
   const sources = results.map(({ papers: _papers, ...meta }) => meta);
   return { papers, sources };

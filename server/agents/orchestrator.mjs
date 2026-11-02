@@ -1,6 +1,7 @@
 import { createDeepSeek } from '../lib/deepseek.mjs';
 import { corpusStats, rankAndSelect } from '../lib/normalize.mjs';
 import { CONFIG } from '../config.mjs';
+import { DEFAULT_RESEARCH_OPTIONS } from '../lib/researchOptions.mjs';
 import { runPlanner } from './planner.mjs';
 import { runScouts } from './scout.mjs';
 import { runAnalyst } from './analyst.mjs';
@@ -21,6 +22,8 @@ const CONFIDENCE_CN = { high: '高', medium: '中', low: '低' };
 
 export async function runResearch(job) {
   const startedAt = Date.now();
+  const options = job.options || DEFAULT_RESEARCH_OPTIONS;
+  const enabledSources = new Set(options.sources || []);
   const tokens = { promptTokens: 0, completionTokens: 0, totalTokens: 0 };
   const llm = createDeepSeek({
     onUsage: usage => {
@@ -32,13 +35,20 @@ export async function runResearch(job) {
   });
 
   job.emit('stages', {
-    stages: AGENT_STAGES.map(stage => ({ ...stage, status: 'queued', detail: stage.role }))
+    stages: AGENT_STAGES.map(stage => {
+      const isSource = ['semanticscholar', 'doaj', 'crossref'].includes(stage.id);
+      if (isSource && !enabledSources.has(stage.id)) {
+        return { ...stage, status: 'skipped', detail: '本次研究未启用该来源' };
+      }
+      return { ...stage, status: 'queued', detail: stage.role };
+    })
   });
   job.emit('meta', {
     startedAt,
     model: CONFIG.deepseekModel,
     llm: llm.available,
-    sources: ['Semantic Scholar', 'DOAJ', 'Crossref']
+    sources: ['Semantic Scholar', 'DOAJ', 'Crossref'],
+    options
   });
 
   try {
@@ -51,7 +61,7 @@ export async function runResearch(job) {
     job.emit('plan', { plan });
 
     const { papers: rawPapers, sources } = await runScouts({ plan, job });
-    const papers = rankAndSelect(rawPapers, CONFIG.maxPapers, plan);
+    const papers = rankAndSelect(rawPapers, options.maxPapers || CONFIG.maxPapers, plan, options);
     const stats = corpusStats(papers);
 
     if (!papers.length) {
@@ -104,7 +114,8 @@ export async function runResearch(job) {
         durationMs: Date.now() - startedAt,
         model: CONFIG.deepseekModel,
         llm: llm.available,
-        generatedAt: new Date().toISOString()
+        generatedAt: new Date().toISOString(),
+        options
       }
     };
 

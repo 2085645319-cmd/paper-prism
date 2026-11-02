@@ -11,6 +11,7 @@ import { PaperDrawer } from './components/PaperCard';
 import { ChatView } from './components/ChatView';
 import { CommandPalette, type PaletteCommand } from './components/CommandPalette';
 import { ResearchTelemetry } from './components/ResearchTelemetry';
+import { ResearchSettings, describeResearchOptions } from './components/ResearchSettings';
 import { Icon } from './components/Icon';
 import { Stat } from './components/Stat';
 import { chatWithResearch, getHealth, startResearch, subscribeToResearch } from './api';
@@ -26,6 +27,7 @@ import type {
   Quality,
   ResearchPlan,
   ResearchResult,
+  ResearchOptions,
   SourceStat,
   Stage,
   TraceEntry
@@ -39,6 +41,14 @@ const EXAMPLES = [
 
 const MOD_KEY = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform) ? '⌘K' : 'Ctrl K';
 const DEMO = import.meta.env.MODE === 'demo' || new URLSearchParams(window.location.search).get('demo') === '1';
+
+const DEFAULT_RESEARCH_OPTIONS: ResearchOptions = {
+  yearPreset: 'recent5',
+  maxPapers: 18,
+  requireAbstract: true,
+  includeClassics: false,
+  sources: ['semanticscholar', 'doaj', 'crossref']
+};
 
 const INITIAL_STAGES: Stage[] = [
   { id: 'planner', name: '规划智能体', role: '拆解研究问题', short: 'PLAN', status: 'queued', detail: '拆解研究问题' },
@@ -128,6 +138,8 @@ function buildMarkdown(result: ResearchResult) {
 export default function App() {
   const [view, setView] = useState<View>('home');
   const [topic, setTopic] = useState(DEMO ? DEMO_TOPIC : '');
+  const [options, setOptions] = useState<ResearchOptions>(DEFAULT_RESEARCH_OPTIONS);
+  const [runOptions, setRunOptions] = useState<ResearchOptions>(DEFAULT_RESEARCH_OPTIONS);
   const [activeTopic, setActiveTopic] = useState('');
   const [jobId, setJobId] = useState('');
   const [stages, setStages] = useState<Stage[]>(INITIAL_STAGES);
@@ -320,6 +332,7 @@ export default function App() {
     setRunning(true);
     startTimeRef.current = Date.now();
     setElapsed(0);
+    setRunOptions({ ...options, sources: [...options.sources] });
 
     if (DEMO) {
       setJobId('DEMO-LOCAL');
@@ -328,7 +341,7 @@ export default function App() {
     }
 
     try {
-      const job = await startResearch(nextTopic);
+      const job = await startResearch(nextTopic, options);
       setJobId(job.id);
       streamRef.current = subscribeToResearch(
         job.id,
@@ -550,6 +563,7 @@ export default function App() {
                 </div>
               )}
               <Composer value={topic} onChange={setTopic} onSubmit={() => start()} loading={running} examples={EXAMPLES} demo={DEMO} />
+              {!DEMO && <ResearchSettings value={options} onChange={setOptions} disabled={running} />}
               <div className={`hero-meta ${DEMO ? 'demo-meta' : ''}`}>
                 {DEMO ? (
                   <>
@@ -669,6 +683,13 @@ export default function App() {
             </div>
           )}
 
+          {!DEMO && (
+            <div className="run-constraints">
+              <span className="mono-label">本次约束</span>
+              <span>{describeResearchOptions(runOptions)}</span>
+            </div>
+          )}
+
           <ResearchTelemetry papers={papers} sources={sources} stats={stats} quality={quality} running={running} demo={DEMO} />
 
           <div className="research-grid">
@@ -711,6 +732,8 @@ export default function App() {
                     onOpen={setSelectedPaper}
                     readingPath={brief?.readingPath.map(item => item.paperId) || []}
                     fullMode={!DEMO}
+                    analysis={analysis}
+                    coverage={quality?.abstractCoverage ?? null}
                   />
                 )}
                 {tab === 'graph' && <KnowledgeGraph papers={papers} themes={analysis?.themes || []} onSelectPaper={setSelectedPaper} />}

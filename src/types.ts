@@ -49,6 +49,16 @@ export interface RelatedPaper {
   why: string;
 }
 
+export type YearPreset = 'recent3' | 'recent5' | 'recent10' | 'all';
+
+export interface ResearchOptions {
+  yearPreset: YearPreset;
+  maxPapers: number;
+  requireAbstract: boolean;
+  includeClassics: boolean;
+  sources: string[];
+}
+
 export interface ChatReply {
   answer: string;
   followUps: string[];
@@ -187,6 +197,7 @@ export interface ResearchResult {
     model: string;
     llm: boolean;
     generatedAt: string;
+    options?: ResearchOptions;
   };
 }
 

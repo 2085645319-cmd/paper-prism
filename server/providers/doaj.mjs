@@ -9,7 +9,7 @@ const text = value => {
   return '';
 };
 
-export async function searchDoaj(query, limit = 10) {
+export async function searchDoaj(query, limit = 10, options = {}) {
   const url = `https://doaj.org/api/search/articles/${encodeURIComponent(query)}?pageSize=${limit}`;
   const data = await fetchJson(url, { timeout: 18000, retries: 1 });
   const results = list(data?.results);
@@ -25,6 +25,8 @@ export async function searchDoaj(query, limit = 10) {
       const fulltext = links.find(link => link?.type === 'fulltext')?.url || links[0]?.url || '';
       const authors = list(bib.author).map(author => text(author?.name)).filter(Boolean).slice(0, 8);
       const year = Number(text(bib.year).slice(0, 4)) || null;
+      if (year && options.yearFrom != null && year < options.yearFrom) return null;
+      if (year && options.yearTo != null && year > options.yearTo) return null;
       return {
         title,
         authors,

@@ -1,23 +1,29 @@
 import { useMemo, useState } from 'react';
-import type { Paper } from '../types';
+import type { Analysis, Paper } from '../types';
 import { Icon } from './Icon';
 import { PaperCard } from './PaperCard';
+import { EvidenceMatrix } from './EvidenceMatrix';
 
 export function PapersView({
   papers,
   onOpen,
   readingPath = [],
-  fullMode = false
+  fullMode = false,
+  analysis = null,
+  coverage = null
 }: {
   papers: Paper[];
   onOpen: (paper: Paper) => void;
   readingPath?: string[];
   fullMode?: boolean;
+  analysis?: Analysis | null;
+  coverage?: number | null;
 }) {
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState<'signal' | 'citations' | 'year'>('signal');
   const [source, setSource] = useState('all');
   const [openOnly, setOpenOnly] = useState(false);
+  const [view, setView] = useState<'cards' | 'matrix'>('cards');
 
   const sources = useMemo(() => [...new Set(papers.flatMap(paper => paper.sources))], [papers]);
   const readingPathSet = useMemo(() => new Set(readingPath), [readingPath]);
@@ -80,36 +86,55 @@ export function PapersView({
         <button type="button" className={`toolbar-chip oa-toggle ${openOnly ? 'active' : ''}`} onClick={() => setOpenOnly(value => !value)}>
           <Icon name="check" size={12} /> 开放获取
         </button>
+        {fullMode && (
+          <div className="toolbar-group view-switch">
+            <span className="mono-label">视图</span>
+            <button type="button" className={`toolbar-chip ${view === 'cards' ? 'active' : ''}`} onClick={() => setView('cards')}>卡片</button>
+            <button type="button" className={`toolbar-chip ${view === 'matrix' ? 'active' : ''}`} onClick={() => setView('matrix')}>证据矩阵</button>
+          </div>
+        )}
         <span className="papers-count">{filtered.length}/{papers.length}</span>
       </div>
 
-      {fullMode && (
-        <div className="papers-pick-hint">
-          <span className="paper-pick rank-1">首选精读</span>
-          <span className="paper-pick rank-2">精读优先</span>
-          <span><i className="hint-dot" /> 按精读价值排序，金色标记为最值得先读的 3 篇</span>
-        </div>
-      )}
-
-      {filtered.length ? (
-        <div className="paper-grid">
-          {filtered.map(paper => (
-            <PaperCard
-              key={paper.id}
-              paper={paper}
-              onOpen={onOpen}
-              featuredRank={featuredRanks.get(paper.id)}
-              inReadingPath={readingPathSet.has(paper.id)}
-              fullMode={fullMode}
-            />
-          ))}
-        </div>
+      {fullMode && view === 'matrix' ? (
+        <EvidenceMatrix
+          papers={filtered}
+          analysis={analysis}
+          readingPath={readingPath}
+          coverage={coverage}
+          onOpenPaper={onOpen}
+        />
       ) : (
-        <div className="empty-state">
-          <Icon name="search" size={22} />
-          <h3>没有匹配的文献</h3>
-          <p>换一个关键词，或清除来源筛选。</p>
-        </div>
+        <>
+          {fullMode && (
+            <div className="papers-pick-hint">
+              <span className="paper-pick rank-1">首选精读</span>
+              <span className="paper-pick rank-2">精读优先</span>
+              <span><i className="hint-dot" /> 按精读价值排序，金色标记为最值得先读的 3 篇</span>
+            </div>
+          )}
+
+          {filtered.length ? (
+            <div className="paper-grid">
+              {filtered.map(paper => (
+                <PaperCard
+                  key={paper.id}
+                  paper={paper}
+                  onOpen={onOpen}
+                  featuredRank={featuredRanks.get(paper.id)}
+                  inReadingPath={readingPathSet.has(paper.id)}
+                  fullMode={fullMode}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="empty-state">
+              <Icon name="search" size={22} />
+              <h3>没有匹配的文献</h3>
+              <p>换一个关键词，或清除来源筛选。</p>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

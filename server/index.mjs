@@ -3,6 +3,7 @@ import path from 'node:path';
 import express from 'express';
 import { CONFIG, DIST_DIR, hasLLM } from './config.mjs';
 import { createJob, getJob } from './lib/jobs.mjs';
+import { normalizeResearchOptions } from './lib/researchOptions.mjs';
 import { runResearch } from './agents/orchestrator.mjs';
 import { answerFollowUp } from './agents/chat.mjs';
 import { translateAbstract } from './lib/translate.mjs';
@@ -75,8 +76,8 @@ app.post('/api/research', (req, res) => {
     return res.status(429).json({ error: '研究请求过于频繁，请稍后再试。' });
   }
 
-  const job = createJob(topic);
-  res.status(202).json({ id: job.id, topic });
+  const job = createJob(topic, normalizeResearchOptions(req.body?.options));
+  res.status(202).json({ id: job.id, topic, options: job.options });
   runResearch(job).catch(error => job.fail(error));
 });
 

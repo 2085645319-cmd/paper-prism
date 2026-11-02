@@ -3,9 +3,10 @@ import { randomUUID } from 'node:crypto';
 const jobs = new Map();
 
 export class ResearchJob {
-  constructor(topic) {
+  constructor(topic, options = null) {
     this.id = randomUUID().slice(0, 8);
     this.topic = topic;
+    this.options = options;
     this.status = 'running';
     this.createdAt = Date.now();
     this.updatedAt = Date.now();
@@ -56,6 +57,7 @@ export class ResearchJob {
     return {
       id: this.id,
       topic: this.topic,
+      options: this.options,
       status: this.status,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
@@ -66,8 +68,8 @@ export class ResearchJob {
   }
 }
 
-export function createJob(topic) {
-  const job = new ResearchJob(topic);
+export function createJob(topic, options = null) {
+  const job = new ResearchJob(topic, options);
   jobs.set(job.id, job);
   return job;
 }
