@@ -9,13 +9,16 @@ const text = value => {
   return '';
 };
 
-export async function searchSemanticScholar(query, limit = 40) {
+export async function searchSemanticScholar(query, limit = 40, options = {}) {
   const currentYear = new Date().getFullYear();
+  const yearFrom = options.yearFrom ?? currentYear - 5;
+  const yearTo = options.yearTo ?? currentYear;
   const params = new URLSearchParams({
     query,
     fields: 'title,abstract,year,venue,authors,citationCount,externalIds,url,publicationTypes',
-    year: `${currentYear - 5}-${currentYear}`
+    year: `${yearFrom}-${yearTo}`
   });
+  if (options.minCitationCount != null) params.set('minCitationCount', String(options.minCitationCount));
   const data = await fetchJson(`https://api.semanticscholar.org/graph/v1/paper/search/bulk?${params}`, {
     timeout: 24000,
     retries: 1

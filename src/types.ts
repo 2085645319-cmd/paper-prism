@@ -37,6 +37,34 @@ export interface Paper {
   signal: number;
 }
 
+export interface RelatedPaper {
+  id: string;
+  title: string;
+  authors: string[];
+  year: number | null;
+  venue: string;
+  doi: string | null;
+  url: string;
+  citations: number;
+  why: string;
+}
+
+export interface ChatReply {
+  answer: string;
+  followUps: string[];
+  papers: RelatedPaper[];
+  mode: 'historical' | 'recent' | 'corpus' | 'general';
+}
+
+export interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  papers?: RelatedPaper[];
+  followUps?: string[];
+  at: number;
+}
+
 export interface PaperInsight {
   keyPoints: string[];
   method: string;

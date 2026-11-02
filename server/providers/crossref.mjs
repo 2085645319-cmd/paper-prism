@@ -18,12 +18,15 @@ function yearOf(item) {
   return null;
 }
 
-export async function searchCrossref(query, limit = 15) {
+export async function searchCrossref(query, limit = 15, options = {}) {
   const currentYear = new Date().getFullYear();
+  const yearFrom = options.yearFrom ?? currentYear - 5;
+  const yearTo = options.yearTo ?? currentYear;
+  const filters = [`from-pub-date:${yearFrom}-01-01`, `until-pub-date:${yearTo}-12-31`];
   const params = new URLSearchParams({
     'query.bibliographic': query,
     rows: String(limit),
-    filter: `from-pub-date:${currentYear - 5}-01-01`,
+    filter: filters.join(','),
     select: 'DOI,title,author,issued,container-title,abstract,is-referenced-by-count,URL,type,publisher',
     mailto: CONFIG.contactEmail
   });

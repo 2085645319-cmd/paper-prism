@@ -208,3 +208,46 @@ export function corpusStats(papers) {
     yearMax: years.length ? Math.max(...years) : null
   };
 }
+
+export function rankRelated(rawPapers, {
+  plan = null,
+  yearFrom = 0,
+  yearTo = new Date().getFullYear(),
+  max = 6,
+  exclude = []
+} = {}) {
+  const excluded = new Set(exclude.map(value => String(value || '').toLowerCase()));
+  const terms = contextTerms(plan);
+  const anchors = topicAnchors(plan);
+  const requiredAnchors = Math.min(2, anchors.length);
+  const merged = mergePapers(rawPapers).filter(paper => {
+    if (!paper.year || paper.year < yearFrom || paper.year > yearTo) return false;
+    if (/^(session details|front matter|editorial|correction|erratum|table of contents)/i.test(paper.title || '')) return false;
+    if (paper.doi && excluded.has(String(paper.doi).toLowerCase())) return false;
+    if (excluded.has(normalizeTitle(paper.title))) return false;
+    if (anchors.length && anchorHits(paper, anchors) < requiredAnchors) return false;
+    return true;
+  });
+
+  const selected = merged
+    .map(paper => ({ ...paper, _score: scorePaper(paper, terms) }))
+    .sort((a, b) => b._score - a._score)
+    .slice(0, max);
+  const maxScore = Math.max(...selected.map(paper => paper._score), 1);
+
+  return selected.map((paper, index) => ({
+    id: `R${index + 1}`,
+    title: paper.title,
+    authors: paper.authors || [],
+    year: paper.year || null,
+    venue: paper.venue || '',
+    doi: paper.doi || null,
+    url: paper.url || (paper.doi ? `https://doi.org/${paper.doi}` : ''),
+    abstract: paper.abstract || '',
+    citations: Math.max(0, paper.citations || 0),
+    sources: [...(paper.sources || [])],
+    type: paper.type || 'article',
+    openAccess: Boolean(paper.openAccess),
+    signal: Math.round(38 + 57 * (paper._score / maxScore))
+  }));
+}

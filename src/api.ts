@@ -1,4 +1,4 @@
-import type { PrismEvent, ResearchResult } from './types';
+import type { ChatReply, PrismEvent, ResearchResult } from './types';
 
 export async function getHealth(): Promise<{ ok: boolean; llm: boolean; model: string; sources: string[] }> {
   const response = await fetch('/api/health');
@@ -51,4 +51,19 @@ export async function translateAbstract(text: string): Promise<string> {
   const data = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(data.error || '摘要翻译失败。');
   return String(data.translation || '');
+}
+
+export async function chatWithResearch(
+  id: string,
+  question: string,
+  history: Array<{ role: 'user' | 'assistant'; content: string }>
+): Promise<ChatReply> {
+  const response = await fetch(`/api/research/${id}/chat`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ question, history })
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error || '对话暂时不可用。');
+  return data as ChatReply;
 }

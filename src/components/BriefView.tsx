@@ -24,13 +24,15 @@ export function BriefView({
   analysis,
   quality,
   papers,
-  onCite
+  onCite,
+  onAsk
 }: {
   brief: Brief | null;
   analysis: Analysis | null;
   quality: Quality | null;
   papers: Paper[];
   onCite: (paper: Paper) => void;
+  onAsk?: (prompt: string) => void;
 }) {
   if (!brief) {
     return (
@@ -49,6 +51,11 @@ export function BriefView({
   }
 
   const paperById = new Map(papers.map(paper => [paper.id, paper]));
+  const years = papers.map(paper => paper.year).filter((year): year is number => Boolean(year));
+  const yearMin = years.length ? Math.min(...years) : null;
+  const yearMax = years.length ? Math.max(...years) : null;
+  const recentCutoff = new Date().getFullYear() - 1;
+  const recentCount = papers.filter(paper => paper.year && paper.year >= recentCutoff).length;
 
   return (
     <div className="brief">
@@ -67,6 +74,27 @@ export function BriefView({
           </div>
         )}
       </div>
+
+      {onAsk && (
+        <section className="brief-history">
+          <div className="brief-history-main">
+            <span className="mono-label">时间范围 · 历史脉络</span>
+            <h4>当前语料以近五年为主，过去的工作可以补查</h4>
+            <p>
+              当前 {papers.length} 篇以 {yearMin || '—'}–{yearMax || '—'} 为主，其中 {recentCount} 篇发表于近两年（{recentCutoff}–{yearMax || '—'}）。
+              想知道这个方向过去有没有经典工作，或者再补一些最新论文，可以直接让 PRISM 去查，并给你原文入口。
+            </p>
+          </div>
+          <div className="brief-history-actions">
+            <button type="button" onClick={() => onAsk('这个方向过去有哪些经典工作？')}>
+              补查早期工作 <Icon name="arrow" size={12} />
+            </button>
+            <button type="button" onClick={() => onAsk('再帮我找一些 2025–2026 年的新文章')}>
+              补查近年 <Icon name="arrow" size={12} />
+            </button>
+          </div>
+        </section>
+      )}
 
       {analysis && analysis.keywords.length > 0 && (
         <div className="keyword-row">

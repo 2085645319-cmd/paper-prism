@@ -4,6 +4,7 @@ import express from 'express';
 import { CONFIG, DIST_DIR, hasLLM } from './config.mjs';
 import { createJob, getJob } from './lib/jobs.mjs';
 import { runResearch } from './agents/orchestrator.mjs';
+import { answerFollowUp } from './agents/chat.mjs';
 import { translateAbstract } from './lib/translate.mjs';
 
 const app = express();
@@ -35,6 +36,20 @@ function allowTranslate(ip) {
   }
   entries.push(now);
   translateRate.set(ip, entries);
+  return true;
+}
+
+const chatRate = new Map();
+function allowChat(ip) {
+  const now = Date.now();
+  const windowStart = now - 60_000;
+  const entries = (chatRate.get(ip) || []).filter(ts => ts > windowStart);
+  if (entries.length >= 20) {
+    chatRate.set(ip, entries);
+    return false;
+  }
+  entries.push(now);
+  chatRate.set(ip, entries);
   return true;
 }
 
@@ -101,6 +116,28 @@ app.get('/api/research/:id/events', (req, res) => {  const job = getJob(req.para
     clearInterval(heartbeat);
     unsubscribe();
   });
+});
+
+app.post('/api/research/:id/chat', async (req, res) => {
+  const job = getJob(req.params.id);
+  if (!job) return res.status(404).json({ error: '当前研究已过期，请开启新对话。' });
+  if (job.status !== 'complete' || !job.result) {
+    return res.status(409).json({ error: '研究尚未完成，完成后即可继续对话。' });
+  }
+  const question = String(req.body?.question || '').replace(/\s+/g, ' ').trim();
+  if (question.length < 2) return res.status(400).json({ error: '请输入你想继续追问的内容。' });
+  if (question.length > 600) return res.status(400).json({ error: '问题请控制在 600 个字符以内。' });
+  if (!allowChat(req.ip || 'local')) {
+    return res.status(429).json({ error: '对话请求过于频繁，请稍后再试。' });
+  }
+
+  const history = Array.isArray(req.body?.history) ? req.body.history.slice(-8) : [];
+  try {
+    const reply = await answerFollowUp({ result: job.result, question, history });
+    res.json(reply);
+  } catch (error) {
+    res.status(502).json({ error: error.message || '对话暂时不可用，请稍后再试。' });
+  }
 });
 
 app.post('/api/translate', async (req, res) => {

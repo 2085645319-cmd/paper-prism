@@ -8,16 +8,18 @@ import { PapersView } from './components/PapersView';
 import { KnowledgeGraph } from './components/KnowledgeGraph';
 import { TraceView } from './components/TraceView';
 import { PaperDrawer } from './components/PaperCard';
+import { ChatView } from './components/ChatView';
 import { CommandPalette, type PaletteCommand } from './components/CommandPalette';
 import { ResearchTelemetry } from './components/ResearchTelemetry';
 import { Icon } from './components/Icon';
 import { Stat } from './components/Stat';
-import { getHealth, startResearch, subscribeToResearch } from './api';
+import { chatWithResearch, getHealth, startResearch, subscribeToResearch } from './api';
 import { DEMO_TOPIC, runDemoResearch } from './demo/runner';
 import { confidenceLabel, STATUS_LABEL } from './i18n';
 import type {
   Analysis,
   Brief,
+  ChatMessage,
   CorpusStats,
   Paper,
   PrismEvent,
@@ -48,7 +50,7 @@ const INITIAL_STAGES: Stage[] = [
   { id: 'critic', name: '引用核查', role: '复核证据链', short: 'CHECK', status: 'queued', detail: '复核证据链' }
 ];
 
-type Tab = 'brief' | 'papers' | 'graph' | 'trace';
+type Tab = 'brief' | 'papers' | 'graph' | 'trace' | 'chat';
 type View = 'home' | 'research';
 
 function humanEvent(event: PrismEvent): { type: string; agent?: string; message: string } | null {
@@ -138,6 +140,8 @@ export default function App() {
   const [stats, setStats] = useState<CorpusStats | null>(null);
   const [result, setResult] = useState<ResearchResult | null>(null);
   const [trace, setTrace] = useState<TraceEntry[]>([]);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const [chatLoading, setChatLoading] = useState(false);
   const [running, setRunning] = useState(false);
   const [error, setError] = useState('');
   const [tab, setTab] = useState<Tab>('brief');
@@ -149,6 +153,8 @@ export default function App() {
   const streamRef = useRef<(() => void) | null>(null);
   const startTimeRef = useRef(0);
   const traceIdRef = useRef(0);
+  const chatIdRef = useRef(0);
+  const chatBusyRef = useRef(false);
   const scrollProgressRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -247,6 +253,8 @@ export default function App() {
     setStats(null);
     setResult(null);
     setTrace([]);
+    setChatMessages([]);
+    setChatLoading(false);
     setError('');
     setSelectedPaper(null);
     setTab('brief');
@@ -341,6 +349,8 @@ export default function App() {
     setView('home');
     setJobId('');
     if (!DEMO) setTopic('');
+    setChatMessages([]);
+    setChatLoading(false);
     setSelectedPaper(null);
     setTimeout(() => document.getElementById('topic-input')?.focus(), 60);
   };
@@ -358,6 +368,57 @@ export default function App() {
     setToast('简报已导出为 Markdown');
   };
 
+  const sendChat = async (question: string) => {
+    const text = question.replace(/\s+/g, ' ').trim();
+    if (!text || chatBusyRef.current || !result || !jobId || DEMO) return;
+    chatBusyRef.current = true;
+    setChatLoading(true);
+    const history = chatMessages.map(message => ({ role: message.role, content: message.content }));
+    chatIdRef.current += 1;
+    const userMessage: ChatMessage = {
+      id: `chat-${chatIdRef.current}`,
+      role: 'user',
+      content: text,
+      at: Date.now()
+    };
+    setChatMessages(current => [...current, userMessage]);
+    try {
+      const reply = await chatWithResearch(jobId, text, history);
+      chatIdRef.current += 1;
+      setChatMessages(current => [
+        ...current,
+        {
+          id: `chat-${chatIdRef.current}`,
+          role: 'assistant',
+          content: reply.answer,
+          papers: reply.papers,
+          followUps: reply.followUps,
+          at: Date.now()
+        }
+      ]);
+    } catch (caught) {
+      chatIdRef.current += 1;
+      setChatMessages(current => [
+        ...current,
+        {
+          id: `chat-${chatIdRef.current}`,
+          role: 'assistant',
+          content: `对话暂时不可用：${caught instanceof Error ? caught.message : '请稍后再试。'}`,
+          at: Date.now()
+        }
+      ]);
+    } finally {
+      chatBusyRef.current = false;
+      setChatLoading(false);
+    }
+  };
+
+  const openChat = (prompt?: string) => {
+    if (DEMO) return;
+    setTab('chat');
+    if (prompt) void sendChat(prompt);
+  };
+
   const focusTopic = () => {
     setView('home');
     setTimeout(() => document.getElementById('topic-input')?.focus(), 50);
@@ -368,9 +429,10 @@ export default function App() {
       if (paletteOpen || view !== 'research') return;
       const target = event.target as HTMLElement | null;
       if (target && ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName)) return;
-      if (['1', '2', '3', '4'].includes(event.key)) {
+      if (['1', '2', '3', '4', '5'].includes(event.key)) {
+        if (DEMO && event.key === '5') return;
         event.preventDefault();
-        setTab((['brief', 'papers', 'graph', 'trace'] as const)[Number(event.key) - 1]);
+        setTab((['brief', 'papers', 'graph', 'trace', 'chat'] as const)[Number(event.key) - 1]);
       } else if (event.key.toLowerCase() === 'e') {
         event.preventDefault();
         exportBrief();
@@ -404,6 +466,7 @@ export default function App() {
         { id: 'papers', group: '导航', label: '打开文献', hint: `${papers.length} 篇排序后的文献`, shortcut: '2', icon: 'list', run: () => setTab('papers') },
         { id: 'graph', group: '导航', label: '打开知识图谱', hint: '探索主题与引用关系', shortcut: '3', icon: 'graph', run: () => setTab('graph') },
         { id: 'trace', group: '导航', label: '打开执行轨迹', hint: '按顺序查看每条智能体消息', shortcut: '4', icon: 'command', run: () => setTab('trace') },
+        { id: 'chat', group: '导航', label: '打开研究对话', hint: '继续追问、补查早期或近年文献', shortcut: '5', icon: 'spark', disabled: DEMO || !result, run: () => setTab('chat') },
         { id: 'export', group: '操作', label: '导出 Markdown 简报', hint: result ? '下载当前研究结果' : '研究完成后可用', shortcut: 'E', icon: 'download', disabled: !result, run: exportBrief },
         { id: 'copy', group: '操作', label: '复制研究课题', hint: activeTopic, shortcut: 'C', icon: 'copy', run: copyTopic },
         { id: 'first-paper', group: '操作', label: '打开第一篇文献', hint: papers[0]?.title || '暂无文献', icon: 'external', disabled: !papers.length, run: () => papers[0] && setSelectedPaper(papers[0]) },
@@ -624,10 +687,24 @@ export default function App() {
                 <button type="button" role="tab" aria-selected={tab === 'trace'} aria-keyshortcuts="4" title="轨迹 (4)" className={tab === 'trace' ? 'active' : ''} onClick={() => setTab('trace')}>
                   轨迹
                 </button>
+                {!DEMO && (
+                  <button type="button" role="tab" aria-selected={tab === 'chat'} aria-keyshortcuts="5" title="对话 (5)" className={tab === 'chat' ? 'active' : ''} onClick={() => setTab('chat')}>
+                    对话 {chatMessages.length > 0 && <span>{chatMessages.filter(message => message.role === 'assistant').length}</span>}
+                  </button>
+                )}
                 <span className={`tab-state ${running ? 'running' : ''}`}>{running ? '实时' : '已封存'}</span>
               </div>
               <div className="tab-panel">
-                {tab === 'brief' && <BriefView brief={brief} analysis={analysis} quality={quality} papers={papers} onCite={setSelectedPaper} />}
+                {tab === 'brief' && (
+                  <BriefView
+                    brief={brief}
+                    analysis={analysis}
+                    quality={quality}
+                    papers={papers}
+                    onCite={setSelectedPaper}
+                    onAsk={DEMO ? undefined : openChat}
+                  />
+                )}
                 {tab === 'papers' && (
                   <PapersView
                     papers={papers}
@@ -638,6 +715,15 @@ export default function App() {
                 )}
                 {tab === 'graph' && <KnowledgeGraph papers={papers} themes={analysis?.themes || []} onSelectPaper={setSelectedPaper} />}
                 {tab === 'trace' && <TraceView entries={trace} />}
+                {!DEMO && tab === 'chat' && (
+                  <ChatView
+                    messages={chatMessages}
+                    loading={chatLoading}
+                    disabled={!result || running}
+                    paperCount={papers.length}
+                    onSend={question => { void sendChat(question); }}
+                  />
+                )}
               </div>
             </section>
           </div>
