@@ -7,9 +7,10 @@ interface ComposerProps {
   onSubmit: () => void;
   loading: boolean;
   examples: string[];
+  demo?: boolean;
 }
 
-export function Composer({ value, onChange, onSubmit, loading, examples }: ComposerProps) {
+export function Composer({ value, onChange, onSubmit, loading, examples, demo = false }: ComposerProps) {
   const ref = useRef<HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
@@ -26,7 +27,7 @@ export function Composer({ value, onChange, onSubmit, loading, examples }: Compo
   return (
     <div className="composer">
       <div className="composer-label">
-        <span className="mono-label">研究课题</span>
+        <span className="mono-label">{demo ? '演示课题' : '研究课题'}</span>
         <span className="composer-count">{value.length}/240</span>
       </div>
       <textarea
@@ -35,35 +36,42 @@ export function Composer({ value, onChange, onSubmit, loading, examples }: Compo
         value={value}
         maxLength={240}
         rows={2}
-        placeholder="输入研究课题，例如：多模态大模型的可信推理"
+        readOnly={demo}
+        placeholder={demo ? '本地预置场景：研究生开题' : '输入研究课题，例如：多模态大模型的可信推理'}
         onChange={event => onChange(event.target.value)}
         onKeyDown={handleKeyDown}
-        aria-label="研究课题"
+        aria-label={demo ? '演示课题' : '研究课题'}
       />
       <div className="composer-footer">
-        <div className="example-row">
-          <span className="mono-label">试试</span>
-          {examples.map(example => (
-            <button
-              type="button"
-              key={example}
-              className="example-chip"
-              onClick={() => {
-                onChange(example);
-                ref.current?.focus();
-              }}
-            >
-              {example}
-            </button>
-          ))}
-        </div>
+        {demo ? (
+          <div className="demo-scenario-line">
+            <span>研究生开题 · 18 篇本地文献 · 不联网</span>
+          </div>
+        ) : (
+          <div className="example-row">
+            <span className="mono-label">试试</span>
+            {examples.map(example => (
+              <button
+                type="button"
+                key={example}
+                className="example-chip"
+                onClick={() => {
+                  onChange(example);
+                  ref.current?.focus();
+                }}
+              >
+                {example}
+              </button>
+            ))}
+          </div>
+        )}
         <button
           type="button"
           className="primary-button"
           onClick={onSubmit}
-          disabled={loading || value.trim().length < 3}
+          disabled={loading || (!demo && value.trim().length < 3)}
         >
-          {loading ? '检索中' : '开始研究'}
+          {loading ? (demo ? '演示中' : '检索中') : demo ? '播放演示' : '开始研究'}
           <span className="button-key">↵</span>
         </button>
       </div>

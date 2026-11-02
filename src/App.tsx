@@ -13,6 +13,7 @@ import { ResearchTelemetry } from './components/ResearchTelemetry';
 import { Icon } from './components/Icon';
 import { Stat } from './components/Stat';
 import { getHealth, startResearch, subscribeToResearch } from './api';
+import { DEMO_TOPIC, runDemoResearch } from './demo/runner';
 import { confidenceLabel, STATUS_LABEL } from './i18n';
 import type {
   Analysis,
@@ -35,6 +36,7 @@ const EXAMPLES = [
 ];
 
 const MOD_KEY = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform) ? '⌘K' : 'Ctrl K';
+const DEMO = import.meta.env.MODE === 'demo' || new URLSearchParams(window.location.search).get('demo') === '1';
 
 const INITIAL_STAGES: Stage[] = [
   { id: 'planner', name: '规划智能体', role: '拆解研究问题', short: 'PLAN', status: 'queued', detail: '拆解研究问题' },
@@ -123,7 +125,7 @@ function buildMarkdown(result: ResearchResult) {
 
 export default function App() {
   const [view, setView] = useState<View>('home');
-  const [topic, setTopic] = useState('');
+  const [topic, setTopic] = useState(DEMO ? DEMO_TOPIC : '');
   const [activeTopic, setActiveTopic] = useState('');
   const [jobId, setJobId] = useState('');
   const [stages, setStages] = useState<Stage[]>(INITIAL_STAGES);
@@ -150,6 +152,10 @@ export default function App() {
   const scrollProgressRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    if (DEMO) {
+      setLlmReady(false);
+      return;
+    }
     getHealth().then(health => setLlmReady(health.llm)).catch(() => setLlmReady(false));
     return () => streamRef.current?.();
   }, []);
@@ -247,8 +253,58 @@ export default function App() {
     setElapsed(0);
   };
 
+  const applyEvent = (event: PrismEvent) => {
+    append轨迹(event);
+    switch (event.type) {
+      case 'stages':
+        setStages(event.stages as Stage[]);
+        break;
+      case 'stage':
+        setStages(current => current.map(stage => stage.id === event.id ? { ...stage, status: event.status as Stage['status'], detail: String(event.detail || stage.detail || '') } : stage));
+        break;
+      case 'plan':
+        setPlan(event.plan as ResearchPlan);
+        break;
+      case 'papers':
+        setPapers(event.papers as Paper[]);
+        setSources(event.sources as SourceStat[]);
+        setStats(event.stats as CorpusStats);
+        break;
+      case 'analysis':
+        setAnalysis(event.analysis as Analysis);
+        break;
+      case 'brief':
+        setBrief(event.brief as Brief);
+        break;
+      case 'review':
+        setQuality(event.quality as Quality);
+        break;
+      case 'done': {
+        const final = event.result as ResearchResult;
+        setResult(final);
+        setPlan(final.plan);
+        setPapers(final.papers);
+        setAnalysis(final.analysis);
+        setBrief(final.brief);
+        setQuality(final.quality);
+        setSources(final.sources);
+        setStats(final.stats);
+        setRunning(false);
+        closeStream();
+        break;
+      }
+      case 'error':
+        setError(String(event.message || 'Research run failed.'));
+        setRunning(false);
+        closeStream();
+        break;
+      default:
+        break;
+    }
+  };
+
   const start = async (value?: string) => {
-    const nextTopic = (value ?? topic).trim();
+    const nextTopic = (DEMO ? DEMO_TOPIC : (value ?? topic)).trim();
     if (nextTopic.length < 3 || running) return;
     resetRun();
     setActiveTopic(nextTopic);
@@ -257,60 +313,18 @@ export default function App() {
     startTimeRef.current = Date.now();
     setElapsed(0);
 
+    if (DEMO) {
+      setJobId('DEMO-LOCAL');
+      streamRef.current = runDemoResearch(applyEvent);
+      return;
+    }
+
     try {
       const job = await startResearch(nextTopic);
       setJobId(job.id);
       streamRef.current = subscribeToResearch(
         job.id,
-        event => {
-          append轨迹(event);
-          switch (event.type) {
-            case 'stages':
-              setStages(event.stages as Stage[]);
-              break;
-            case 'stage':
-              setStages(current => current.map(stage => stage.id === event.id ? { ...stage, status: event.status as Stage['status'], detail: String(event.detail || stage.detail || '') } : stage));
-              break;
-            case 'plan':
-              setPlan(event.plan as ResearchPlan);
-              break;
-            case 'papers':
-              setPapers(event.papers as Paper[]);
-              setSources(event.sources as SourceStat[]);
-              setStats(event.stats as CorpusStats);
-              break;
-            case 'analysis':
-              setAnalysis(event.analysis as Analysis);
-              break;
-            case 'brief':
-              setBrief(event.brief as Brief);
-              break;
-            case 'review':
-              setQuality(event.quality as Quality);
-              break;
-            case 'done': {
-              const final = event.result as ResearchResult;
-              setResult(final);
-              setPlan(final.plan);
-              setPapers(final.papers);
-              setAnalysis(final.analysis);
-              setBrief(final.brief);
-              setQuality(final.quality);
-              setSources(final.sources);
-              setStats(final.stats);
-              setRunning(false);
-              closeStream();
-              break;
-            }
-            case 'error':
-              setError(String(event.message || 'Research run failed.'));
-              setRunning(false);
-              closeStream();
-              break;
-            default:
-              break;
-          }
-        },
+        applyEvent,
         () => {
           setError('事件流已断开，请重新发起研究。');
         }
@@ -424,9 +438,9 @@ export default function App() {
           <nav className="topnav">
             <a href="#method">方法</a>
             <a href="#output">产出</a>
-            <span className={`system-state ${llmReady === false ? 'warn' : ''}`}>
+            <span className={`system-state ${DEMO ? 'demo' : llmReady === false ? 'warn' : ''}`}>
               <i className="live-dot" />
-              {llmReady === false ? '启发式模式' : 'DeepSeek 在线'}
+              {DEMO ? '本地演示' : llmReady === false ? '启发式模式' : 'DeepSeek 在线'}
             </span>
             <button type="button" className="command-trigger" onClick={() => setPaletteOpen(true)}>
               <Icon name="command" size={13} />
@@ -440,7 +454,10 @@ export default function App() {
               <Icon name="command" size={13} />
               <kbd>{MOD_KEY}</kbd>
             </button>
-            <span className="run-id">研究编号 / {jobId || '......'}</span>
+            <span className={`run-id ${DEMO ? 'demo-run' : ''}`}>
+              {DEMO ? '演示编号 / LOCAL-DEMO' : `研究编号 / ${jobId || '......'}`}
+            </span>
+            {DEMO && <span className="demo-chip">本地预置数据</span>}
             <button type="button" className="secondary-button small" onClick={goHome}>
               <Icon name="plus" size={13} /> 新研究
             </button>
@@ -459,11 +476,30 @@ export default function App() {
                 输入一个研究课题。PRISM 会派出检索、分析、综述三个层级的智能体，
                 把散落的论文整理成可引用的要点、原文入口，以及这个领域还没解决的问题。
               </p>
-              <Composer value={topic} onChange={setTopic} onSubmit={() => start()} loading={running} examples={EXAMPLES} />
-              <div className="hero-meta">
-                <div><strong>03</strong><span>学术数据源</span></div>
-                <div><strong>07</strong><span>智能体协同</span></div>
-                <div><strong>01</strong><span>研究简报，而非链接堆</span></div>
+              {DEMO && (
+                <div className="demo-banner">
+                  <span className="demo-badge">原型 Demo</span>
+                  <div>
+                    <strong>场景：研究生开题</strong>
+                    <span>本地预置 18 篇文献 · 不调用 DeepSeek / 学术 API · 点击「播放演示」即可</span>
+                  </div>
+                </div>
+              )}
+              <Composer value={topic} onChange={setTopic} onSubmit={() => start()} loading={running} examples={EXAMPLES} demo={DEMO} />
+              <div className={`hero-meta ${DEMO ? 'demo-meta' : ''}`}>
+                {DEMO ? (
+                  <>
+                    <div><strong>18</strong><span>篇本地文献</span></div>
+                    <div><strong>00</strong><span>API 调用</span></div>
+                    <div><strong>01</strong><span>开题演示场景</span></div>
+                  </>
+                ) : (
+                  <>
+                    <div><strong>03</strong><span>学术数据源</span></div>
+                    <div><strong>07</strong><span>智能体协同</span></div>
+                    <div><strong>01</strong><span>研究简报，而非链接堆</span></div>
+                  </>
+                )}
               </div>
             </div>
             <div className="hero-instrument">
@@ -569,7 +605,7 @@ export default function App() {
             </div>
           )}
 
-          <ResearchTelemetry papers={papers} sources={sources} stats={stats} quality={quality} running={running} />
+          <ResearchTelemetry papers={papers} sources={sources} stats={stats} quality={quality} running={running} demo={DEMO} />
 
           <div className="research-grid">
             <AgentRail stages={stages} plan={plan} quality={quality} sources={sources} />

@@ -2845,3 +2845,92 @@ a {
 .query-details summary:hover {
   color: var(--ink-muted);
 }
+
+/* ── Local prototype demo ───────────────────────────────────────────── */
+
+.system-state.demo {
+  color: #aeb5ff;
+  border-color: rgba(94, 106, 210, 0.42);
+  background: rgba(94, 106, 210, 0.07);
+}
+.system-state.demo .live-dot {
+  background: var(--primary);
+  box-shadow: 0 0 0 3px rgba(94, 106, 210, 0.14);
+}
+.demo-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border: 1px solid rgba(94, 106, 210, 0.38);
+  border-radius: 20px;
+  color: #aeb5ff;
+  background: rgba(94, 106, 210, 0.08);
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+.run-id.demo-run {
+  color: #aeb5ff;
+}
+.demo-badge {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  padding: 3px 7px;
+  border-radius: 4px;
+  background: rgba(94, 106, 210, 0.16);
+  border: 1px solid rgba(94, 106, 210, 0.4);
+  color: #c0c5ff;
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+.demo-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  max-width: 680px;
+  margin-top: 24px;
+  padding: 11px 13px;
+  border: 1px solid rgba(94, 106, 210, 0.26);
+  border-radius: 8px;
+  background: linear-gradient(90deg, rgba(94, 106, 210, 0.1), rgba(94, 106, 210, 0.025));
+}
+.demo-banner > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.demo-banner strong {
+  color: var(--ink-muted);
+  font-size: 12px;
+  font-weight: 550;
+}
+.demo-banner span:not(.demo-badge) {
+  color: var(--ink-tertiary);
+  font-size: 10px;
+  line-height: 1.5;
+}
+.demo-banner + .composer {
+  margin-top: 16px;
+}
+.demo-scenario-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  color: var(--ink-tertiary);
+  font-size: 10px;
+}
+.demo-scenario-line .demo-badge {
+  color: #aeb5ff;
+}
+.composer textarea[readonly] {
+  cursor: default;
+}
+.hero-meta.demo-meta strong {
+  color: #aeb5ff;
+}

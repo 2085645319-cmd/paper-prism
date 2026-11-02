@@ -34,13 +34,15 @@ export function ResearchTelemetry({
   sources,
   stats,
   quality,
-  running
+  running,
+  demo = false
 }: {
   papers: Paper[];
   sources: SourceStat[];
   stats: CorpusStats | null;
   quality: Quality | null;
   running: boolean;
+  demo?: boolean;
 }) {
   if (!papers.length) return null;
 
@@ -121,7 +123,7 @@ export function ResearchTelemetry({
         <article className="telemetry-card token-card">
           <div className="telemetry-top">
             <span className="mono-label">模型预算</span>
-            <span>{quality ? (quality.mode === 'heuristic' ? '启发式' : 'DeepSeek') : '估算中'}</span>
+            <span>{demo ? '本地预置' : quality ? (quality.mode === 'heuristic' ? '启发式' : 'DeepSeek') : '估算中'}</span>
           </div>
           <div className="token-total">
             <strong>{tokens.totalTokens ? formatNumber(tokens.totalTokens) : '—'}</strong>

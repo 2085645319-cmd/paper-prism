@@ -9,6 +9,8 @@
 
 **在线体验：** https://prism-7z6p.onrender.com
 
+**零成本原型 Demo：** https://2085645319-cmd.github.io/paper-prism/
+
 ## Preview
 
 ![PRISM literature brief](artifacts/results.png)
@@ -138,6 +140,26 @@ Vite 开发地址是 `http://127.0.0.1:5173`，`/api` 会代理到 `127.0.0.1:87
 
 免费实例闲置后会休眠，首次打开需要冷启动；需要稳定在线可以升级 Render 付费实例，或用 Railway / Fly.io / VPS。
 
+### 原型 Demo（无后端 / 无 API）
+
+如果评审不要求真实联网，只想零成本展示完整交互，使用静态 Demo：
+
+**https://2085645319-cmd.github.io/paper-prism/**
+
+- 固定场景：研究生开题 · 多模态大模型的可信推理
+- 本地预置 18 篇文献、5 个主题、5 个未解问题、7 条阅读路径
+- 11 秒回放 Agent Mesh、运行遥测、简报、文献、图谱与轨迹
+- 不请求 `/api`、不调用 DeepSeek、不消耗任何 API 额度
+- 构建命令：
+
+```bash
+npm run build:demo
+# 产物在 dist-demo/；用任意静态服务器打开，例如：
+python -m http.server 8788 --directory dist-demo
+```
+
+静态 Demo 的构建产物同时放在 `docs/`，由 GitHub Pages 托管。
+
 也提供了 Dockerfile：
 
 ```bash
@@ -145,7 +167,7 @@ docker build -t prism .
 docker run -p 8790:8790 -e DEEPSEEK_API_KEY=你的Key prism
 ```
 
-> GitHub Pages 只能托管静态文件，不能运行这个项目的 Express + SSE + DeepSeek 后端。
+> GitHub Pages 只托管静态原型 Demo；完整的 Express + SSE + DeepSeek 版本仍需要 Render / Node 服务。
 
 ## 目录
 

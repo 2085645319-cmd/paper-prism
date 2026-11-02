@@ -8,6 +8,7 @@
     "dev": "node server/index.mjs",
     "dev:client": "vite",
     "build": "tsc --noEmit && vite build",
+    "build:demo": "tsc --noEmit && vite build --mode demo",
     "start": "node server/index.mjs",
     "test:smoke": "node scripts/smoke.mjs"
   },

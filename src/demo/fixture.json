@@ -1,0 +1,1010 @@
+{
+  "topic": "多模态大模型的可信推理",
+  "plan": {
+    "topic_en": "Trustworthy reasoning in multimodal large language models",
+    "field": "多模态大模型可信推理",
+    "queries": [
+      "multimodal large language model trustworthy reasoning",
+      "vision language model chain of thought reasoning faithfulness",
+      "multimodal reasoning hallucination and robustness",
+      "multimodal reasoning benchmark evaluation faithfulness",
+      "reliable multimodal reasoning large vision language models 2025"
+    ],
+    "dimensions": [
+      {
+        "name": "推理忠实性",
+        "question": "多模态大模型的推理链是否真实反映其决策依据，还是事后合理化？如何度量推理过程与最终答案的一致性？"
+      },
+      {
+        "name": "幻觉与事实性",
+        "question": "在跨模态推理中，模型如何产生与图像或文本证据不符的幻觉内容？哪些机制导致事实性错误？"
+      },
+      {
+        "name": "鲁棒性与对抗安全",
+        "question": "面对对抗扰动、分布偏移或误导性视觉输入时，多模态推理的稳定性与安全性如何？"
+      },
+      {
+        "name": "评测与可解释性",
+        "question": "现有基准与方法能否有效评估多模态推理的可信度，并提供可解释的过程级证据？"
+      }
+    ]
+  },
+  "papers": [
+    {
+      "id": "P1",
+      "title": "A Large Language Model Framework for Causal Reasoning and Performance Prediction in Multimodal Time-Series Data",
+      "authors": [
+        "Zihan Bian",
+        "Linyu Mou"
+      ],
+      "year": 2025,
+      "venue": "MDPI AG",
+      "doi": "10.20944/preprints202511.0001.v1",
+      "url": "https://doi.org/10.20944/preprints202511.0001.v1",
+      "abstract": "Understanding the dynamic evolution of electrocatalysts under operando conditions is critical for advancing sustainable energy conversion. However, interpreting complex multimodal time-series data remains challenging. In this work, we presents Multimode Operando GPT (MOGPT), a large language model-based framework for causal reasoning and performance prediction in electrocatalysis. MOGPT integrates multimodal data processing with a Temporal Causal Discovery Module, a Catalytic Evolution Knowledge Graph, and a Causal Consistency Loss to identify temporal and causal relationships in catalyst behavior. A large-scale dataset of causal question–answer pairs across various catalyst systems is constructed for benchmarking. Experimental results show that MOGPT achieves superior performance in spatio-temporal reasoning, causal inference, and performance prediction, while maintaining strong robustness and generalization. This approach highlights the potential of large language models for interpretable and data-driven discovery in electrocatalysis.",
+      "citations": 1,
+      "sources": [
+        "Crossref"
+      ],
+      "type": "posted-content",
+      "openAccess": false,
+      "signal": 95
+    },
+    {
+      "id": "P2",
+      "title": "Evidence-Guided Diagnostic Reasoning for Pediatric Chest Radiology Based on Multimodal Large Language Models",
+      "authors": [
+        "Yuze Zhao",
+        "Qing Wang",
+        "Yingwen Wang",
+        "Ruiwei Zhao",
+        "Rui Feng",
+        "Xiaobo Zhang"
+      ],
+      "year": 2026,
+      "venue": "Journal of Imaging",
+      "doi": "10.3390/jimaging12030111",
+      "url": "https://www.mdpi.com/2313-433X/12/3/111",
+      "abstract": "Pediatric respiratory diseases are a leading cause of hospital admissions and childhood mortality worldwide, highlighting the critical need for accurate and timely diagnosis to support effective treatment and long-term care. Chest radiography remains the most widely used imaging modality for pediatric pulmonary assessment. Consequently, reliable AI-assisted diagnostic methods are essential for alleviating the workload of clinical radiologists. However, most existing deep learning-based approaches are data-driven and formulate diagnosis as a black-box image classification task, resulting in limited interpretability and reduced clinical trustworthiness. To address these challenges, we propose a trustworthy two-stage diagnostic paradigm for pediatric chest X-ray diagnosis that closely aligns with the radiological workflow in clinical practice, in which the diagnosis procedure is constrained by evidence. In the first stage, a vision–language model fine-tuned on pediatric data identifies radiological findings from chest radiographs, producing structured and interpretable diagnostic evidence. In the second stage, a multimodal large language model integrates the radiograph, extracted findings, patient demographic information, and external medical domain knowledge with RAG mechanism to generate the final diagnosis. Experiments conducted on the VinDr-PCXR dataset demonstrate that our method achieves 90.1% diagnostic accuracy, 70.9% F1-score, and 82.5% AUC, representing up to a 13.1% increase in diagnosis accuracy over the state-of-the-art baselines. These results validate the effectiveness of combining multimodal reasoning with explicit medical evidence and domain knowledge, and indicate the strong potential of the proposed approach for trustworthy pediatric radiology diagnosis.",
+      "citations": 0,
+      "sources": [
+        "DOAJ"
+      ],
+      "type": "article",
+      "openAccess": true,
+      "signal": 95
+    },
+    {
+      "id": "P3",
+      "title": "Adaptive diagnostic reasoning framework for pathology with multimodal large language models",
+      "authors": [
+        "Yunqi Hong",
+        "Kuei-Chun Kao",
+        "Liam Edwards",
+        "Nein-Tzu Liu",
+        "Chung-Yen Huang",
+        "Alex Oliveira-Kowaleski",
+        "Cho-Jui Hsieh",
+        "Neil Y. C. Lin"
+      ],
+      "year": 2026,
+      "venue": "Communications Medicine",
+      "doi": "10.1038/s43856-026-01491-z",
+      "url": "https://doi.org/10.1038/s43856-026-01491-z",
+      "abstract": "Abstract Background Artificial intelligence enhances pathology screening efficiency, yet clinical adoption remains limited because most systems operate as opaque black boxes. We aim to resolve this opacity by establishing a framework that generates transparent, evidence-linked reasoning to support diagnostic auditing. Methods We present a framework that shifts off-the-shelf multimodal large language models from passive pattern recognition to active diagnostic reasoning. Using small labeled subsets from breast and prostate cancer datasets, we employ a two-phase self-learning process to derive diagnostic criteria without updating model weights. We integrate expert feedback from board-certified pathologists to ensure the generated descriptions align with established medical standards. Results Here we show that our framework produces audit-ready rationales while achieving over 90% accuracy in distinguishing normal tissue from invasive carcinoma. Beyond binary classification, the model effectively differentiates complex subtypes like ductal carcinoma in situ by autonomously identifying hallmark histological features, including nuclear irregularities and structural disruption. These computer-generated descriptions closely match expert assessments. Our approach delivers substantial performance gains over conventional baselines and adapts effectively across diverse tissue types and independent foundation models. Conclusions By uniting visual understanding with reasoning, our framework provides a promising approach for clinically trustworthy artificial intelligence. This framework helps bridge the gap between opaque classifiers and auditable systems, suggesting a viable path toward evidence-linked interpretation in medical workflows.",
+      "citations": 0,
+      "sources": [
+        "DOAJ"
+      ],
+      "type": "article",
+      "openAccess": true,
+      "signal": 91
+    },
+    {
+      "id": "P4",
+      "title": "Med-AgentX: Multimodal Large Language Model Agents with Explainable Reinforcement Learning for Trustworthy Biomedical Decision Support",
+      "authors": [
+        "PRATIK RAKESHBHAI HIRAGAR"
+      ],
+      "year": 2025,
+      "venue": "Springer Science and Business Media LLC",
+      "doi": "10.21203/rs.3.rs-7773686/v1",
+      "url": "https://doi.org/10.21203/rs.3.rs-7773686/v1",
+      "abstract": "Abstract Biomedical decision support systems face persistent challenges in integrating multimodal patient data and providing clinicians with trustworthy, transparent recommendations. While large language models (LLMs) and multimodal foundation models demonstrate remarkable reasoning across text, images, and structured records, their black-box nature and brittleness under noisy or adversarial conditions hinder deployment in safety-critical healthcare settings. We propose Med-AgentX, a multimodal LLM-agent framework enhanced with reinforcement learning (RL) and attribution-based explainability. Med-AgentX fuses clinical text, imaging, and structured data through crossmodal attention, while an RL policy optimizes for diagnostic accuracy, robustness, and explanation fidelity. Human-in-theloop feedback further aligns the system with clinical expertise. Experiments on benchmark datasets demonstrate that Med- AgentX outperforms strong baselines in predictive accuracy and robustness, while offering interpretable rationales validated by clinicians. Taken together, Med-AgentX represents a step toward next-generation biomedical AI that is powerful, accountable, and clinician-aligned.",
+      "citations": 0,
+      "sources": [
+        "Crossref"
+      ],
+      "type": "posted-content",
+      "openAccess": false,
+      "signal": 90
+    },
+    {
+      "id": "P5",
+      "title": "Ethical and governance challenges of large language models in power and energy systems: a review and framework for responsible AI deployment",
+      "authors": [
+        "Mohamad Fani Sulaima",
+        "Sunny Arora",
+        "Ondrej Krejcar",
+        "Lukas Herout",
+        "Hamidreza Namazi"
+      ],
+      "year": 2026,
+      "venue": "Energy Nexus",
+      "doi": "10.1016/j.nexus.2026.100869",
+      "url": "http://www.sciencedirect.com/science/article/pii/S277242712600241X",
+      "abstract": "Large Language Models (LLMs) are increasingly used for forecasting, monitoring, diagnostics, predictive maintenance, and decision support in power and energy systems, yet their deployment in safety-critical infrastructures raises concerns regarding hallucination, bias, explainability, cybersecurity, accountability, and human oversight. This structured scoping and critical review synthesizes a 126-source evidence corpus and compares emerging LLM paradigms, including domain-adapted models, retrieval-augmented generation, multimodal and reasoning models, agentic systems, and MCP-enabled architectures. Particular attention is given to power-system-specific requirements such as SCADA/EMS/DMS integration, topology awareness, state estimation, power-flow and voltage constraints, N-1 security, protection coordination, and operator authority. Quantitative publication trends and comparative evidence analysis are used to identify methodological and deployment gaps in the literature. Building on these findings, a multi-layer governance framework is proposed that integrates data and model governance, deterministic engineering verification, cybersecurity safeguards, human authorization, auditability, and regulatory oversight. A distribution-network fault-diagnosis and service-restoration workflow, together with a staged validation protocol, illustrates practical implementation. The review concludes with measurable research priorities for trustworthy LLM-enabled energy systems.",
+      "citations": 0,
+      "sources": [
+        "DOAJ"
+      ],
+      "type": "article",
+      "openAccess": true,
+      "signal": 89
+    },
+    {
+      "id": "P6",
+      "title": "Evaluating Multimodal Large Language Models for Implicit Advertising Reasoning",
+      "authors": [
+        "Haozhi Sun",
+        "Heng Yuan"
+      ],
+      "year": 2025,
+      "venue": "Springer Science and Business Media LLC",
+      "doi": "10.21203/rs.3.rs-5914045/v1",
+      "url": "https://doi.org/10.21203/rs.3.rs-5914045/v1",
+      "abstract": "Abstract In this paper, we present a novel method for implicit reasoning in advertising, focusing on the use of a multimodal large language model integrated with a specialized prompt engineering approach. Advertising often involves implicit reasoning, where messages are conveyed indirectly through a combination of text, images, and emotions. This makes it challenging for traditional models to capture the subtle nuances involved. To address this, we propose an innovative multi-round prompt design that enables the model to refine its reasoning process iteratively, thus improving its ability to decode implicit intentions in advertisements. Our method leverages GPT-4 as the core reasoning engine, and the prompts are designed to guide the model through multiple reasoning phases, ensuring that it effectively incorporates both textual and visual cues. We collect a custom dataset of advertising content to train and evaluate our approach, and our results demonstrate significant improvements in reasoning accuracy compared to baseline models. We also propose novel evaluation metrics, which go beyond traditional accuracy and incorporate human-like reasoning assessments. Experimental results and human evaluations show that our method outperforms existing models, both in terms of reasoning depth and interpretability, making it a promising solution for understanding complex advertising content.",
+      "citations": 0,
+      "sources": [
+        "Crossref"
+      ],
+      "type": "posted-content",
+      "openAccess": false,
+      "signal": 88
+    },
+    {
+      "id": "P7",
+      "title": "Large Language Models Empowering Blockchain Service Security: A Comprehensive Survey of Status, Challenges, and Opportunities (Invited)",
+      "authors": [
+        "LIN Dan, LU Shunfeng, LIU Ziyan, ZHANG Bozhao, HE Long, JIANG Zigui, WU Jiajing, ZHENG Zibin"
+      ],
+      "year": 2026,
+      "venue": "Jisuanji gongcheng",
+      "doi": "10.19678/j.issn.1000-3428.0253233",
+      "url": "https://www.ecice06.com/fileup/1000-3428/PDF/20260101.pdf",
+      "abstract": "Blockchain has gradually evolved into a critical infrastructure that supports the digital economy. However, its inherent characteristics such as anonymity, cross-chain interoperability, and multi-party participation have led to frequent security incidents, including fraud, money laundering, and cyberattacks, which pose serious threats to the stability and compliance of the blockchain ecosystem. Although existing analytical tools and methods have made notable progress in blockchain service security, they suffer from limited generalizability, insufficient reasoning capabilities, and poor adaptability to the evolution of complex business logic. The rapid development of generative Large Language Model (LLM) has significantly reshaped the service computing paradigm. With their strong capabilities in natural language understanding, knowledge reasoning, and multimodal integration, LLM provide new perspectives and technical pathways for research on blockchain service security. This paper systematically reviews the progress of LLM applications in three major areas: pre-event smart contract auditing, in-event anomaly detection, and post-event cross-chain behavior correlation. Further, it summarizes their advantages and limitations and highlights representative practices of LLM-enabled blockchain security. Finally, open research challenges and future directions are discussed, aiming to provide insights for building a trustworthy, interpretable, and efficient framework for blockchain service computing and governance.",
+      "citations": 0,
+      "sources": [
+        "DOAJ"
+      ],
+      "type": "article",
+      "openAccess": true,
+      "signal": 87
+    },
+    {
+      "id": "P8",
+      "title": "DermaGPT a federated multimodal framework with a meta learned trust function for interpretable dermatology diagnostics",
+      "authors": [
+        "Nastaran Mehrabi Hashjin",
+        "Mohammad Hussein Amiri",
+        "Maryam Khanian Najafabadi"
+      ],
+      "year": 2026,
+      "venue": "Scientific Reports",
+      "doi": "10.1038/s41598-026-38715-0",
+      "url": "https://doi.org/10.1038/s41598-026-38715-0",
+      "abstract": "Abstract Advances in generative and federated artificial intelligence enable privacy-aware diagnostic systems that integrate multimodal reasoning and explainability. This work introduces DermaGPT, a federated multimodal framework for dermatology decision support that emphasizes trustworthy use under heterogeneous, privacy-sensitive data. The system combines a PaLI-Gemma 2 vision–language backbone, fine-tuned with low-rank adaptation, with a retrieval-augmented large language model that generates clinically coherent and patient-friendly explanations. To improve robustness and calibration across sites, a meta-learned trust function (MLTF) dynamically re-weights client updates based on uncertainty, calibration, and domain-shift indicators. Evaluated on four institutional datasets and an external cohort of 4,452 biopsy-confirmed clinical and dermoscopic images, DermaGPT achieved 90.2% diagnostic accuracy across 11 lesion types and 93.3% accuracy in malignancy prediction, with well-calibrated outputs under federated training. Expert dermatologists rated its explanations as clear and clinically relevant; these ratings were obtained on class-level canonical exemplars rather than per-image reports. In our deployment threat model, images are processed locally by the vision module; when a third-party LLM is used, only text (a short diagnostic summary and the user question) is transmitted, which may still be considered sensitive health data. Taken together, these results indicate that a trust-aware, federated multimodal design can deliver interpretable, efficient, and privacy-aware dermatology decision support that is intended to augment rather than replace clinician judgment.",
+      "citations": 0,
+      "sources": [
+        "DOAJ"
+      ],
+      "type": "article",
+      "openAccess": true,
+      "signal": 86
+    },
+    {
+      "id": "P9",
+      "title": "From text to multimodality: A comprehensive survey of LLMs and MLLMs across diverse domains",
+      "authors": [
+        "Anbukkarasi S",
+        "Hemalatha S",
+        "Arunkumar B",
+        "Shanmugavalli V",
+        "Kokila S",
+        "Yashaswini K A"
+      ],
+      "year": 2026,
+      "venue": "ICT Express",
+      "doi": "10.1016/j.icte.2026.07.023",
+      "url": "http://www.sciencedirect.com/science/article/pii/S2405959526001372",
+      "abstract": "The rapid development of Artificial Intelligence has made it possible for advanced language learning systems, including Large Language Models (LLMs) and Multimodal Large Language Models (MLLMs), to be created. These models go beyond the traditional text-based processing by incorporating different modalities like video, audio, text creating more accurate prediction systems. Here, we aim to give a thorough look at multimodal models focusing on their use and challenges in different real-world domains including healthcare, education, industry, governance, security, assistive systems, scientific research, and creative media. We break down model architecture, multimodal fusion techniques, training methods, and specific adaptations for domains that improve understanding, decision-making, and interactive capabilities. On top of that, we discuss major benchmark datasets, performance evaluation methods, and real-world examples with the help of which we point out the present capabilities and practical limitations. We engage with major challenges such as data inconsistency, model alignment scalability computational cost, privacy issues, bias, and explainability. Besides, this article explores instructional-tuned multimodal systems, lightweight domain adaptations, retrieval-augmented multimodal reasoning, and human-in-the-loop learning models that are gaining ground. We finish by listing prospective research directions that lead to trustworthy, energy-efficient, context-aware, and ethically aligned multimodal AI systems that connect artificial and augmented intelligence. This article is a thorough guide for researchers, professionals, and policymakers in pushing forward multimodal models to strong and socially responsible usage across different domains.",
+      "citations": 0,
+      "sources": [
+        "DOAJ"
+      ],
+      "type": "article",
+      "openAccess": true,
+      "signal": 86
+    },
+    {
+      "id": "P10",
+      "title": "Improving Multimodal Reasoning in Large Language Models via Federated Example Selection",
+      "authors": [
+        "Beatrice Fawcett",
+        "Felix Ashworth",
+        "Harriet Dunbar"
+      ],
+      "year": 2024,
+      "venue": "Springer Science and Business Media LLC",
+      "doi": "10.21203/rs.3.rs-4745818/v1",
+      "url": "https://doi.org/10.21203/rs.3.rs-4745818/v1",
+      "abstract": "Abstract Large language models have experienced a significant transformation with the advent of powerful models capable of generating, translating, and summarizing text. However, effectively integrating and reasoning with multimodal data, which includes text, images, and audio, continues to pose a formidable challenge. The novel concept of federated example selection, as proposed in this paper, is significant because it addresses critical issues of data privacy, diversity, and representation, thus enhancing multimodal reasoning capabilities in AI models. By modifying the open-source LLM, Llama, with a federated example selection algorithm, this research demonstrates substantial improvements in model performance across various tasks. The methodology involves a comprehensive approach that includes secure data collection, algorithm design, and iterative model refinement, all within a federated learning framework. The experimental results indicate notable advancements in accuracy, precision, recall, and F1-score, outperforming state-of-the-art models and showcasing the algorithm's efficacy. Additionally, scalability analysis confirms the algorithm's ability to handle large-scale datasets efficiently, while ablation studies highlight the importance of each algorithmic component. The findings suggest that the proposed methodology not only enhances the integration of diverse data types but also paves the way for future developments in multimodal AI, demonstrating the transformative potential of federated learning approaches.",
+      "citations": 0,
+      "sources": [
+        "Crossref"
+      ],
+      "type": "posted-content",
+      "openAccess": false,
+      "signal": 86
+    },
+    {
+      "id": "P11",
+      "title": "A Review of Event Detection Techniques for Online Public Opinion Monitoring",
+      "authors": [
+        "CHENG Gang",
+        "XIA Jingjing",
+        "DAI Lili",
+        "WU Yongfei",
+        "YANG Liu"
+      ],
+      "year": 2026,
+      "venue": "Dianxin kexue",
+      "doi": null,
+      "url": "http://www.telecomsci.com/thesisDetails#10.11959/j.issn.1000-0801.DXKX260556",
+      "abstract": "With the rapid development of social media technology, social media has become an important platform for the dissemination of social information and the expression of public opinion. Because this type of information often comes in short texts with a lot of noise, which is different from traditional text, the limitations of traditional public opinion analysis methods in event detection, evolution tracking, and authenticity judgment have become increasingly apparent. As a result, event detection technology is increasingly being applied in the field of online public opinion perception. This article systematically reviews the development and research progress of online public opinion event detection technology, focusing on key aspects such as the basics of online public opinion and social media data, classification of event detection tasks and lifecycle theory, statistical and traditional machine learning methods, deep semantic and temporal modeling methods, multi-source information and relationship modeling methods, as well as large models and open learning methods. It also systematically outlines mainstream evaluation metrics and common datasets. Through comparative analysis and literature review, this paper demonstrates the advantages of different technical approaches in event discovery, semantic representation, and open-domain adaptability. Finally, The article delves into current key challenges, including insufficient ability to detect unknown events in dynamic open environments, difficulties in fusing multi-source heterogeneous information and cross-modal semantic alignment, reliability and efficient deployment bottlenecks of large language models, and standardization of evaluation systems. It also offers constructive prospects for future research in areas like continuous perception in an open world, unified multimodal understanding, knowledge-enhanced causal reasoning, efficient and trustworthy large model detection, and dynamic evaluation system construction. The research results can provide a new perspective on public opinion.",
+      "citations": 0,
+      "sources": [
+        "DOAJ"
+      ],
+      "type": "article",
+      "openAccess": true,
+      "signal": 84
+    },
+    {
+      "id": "P12",
+      "title": "The role of multimodality in clinical disease diagnosis: advances, challenges, and opportunities",
+      "authors": [
+        "Asif Nawaz",
+        "Afaf Edinat",
+        "Muhammad Rizwan Rashid Rana",
+        "Tariq Ali",
+        "Ghulam Mustafa",
+        "Sidra Tahir",
+        "Seung Won Lee",
+        "Seung Won Lee"
+      ],
+      "year": 2026,
+      "venue": "Frontiers in Public Health",
+      "doi": "10.3389/fpubh.2026.1788454",
+      "url": "https://www.frontiersin.org/articles/10.3389/fpubh.2026.1788454/full",
+      "abstract": "Advances in artificial intelligence (AI) have significantly improved medical diagnosis, with deep learning models achieving expert-level performance across unimodal tasks such as medical imaging, physiological signal analysis, electronic health record (EHR) modeling, and omics-based prediction. However, clinical decision-making is inherently multimodal, as diseases manifest through complex interactions among imaging phenotypes, molecular signatures, physiological measurements, and textual clinical documentation. Consequently, unimodal systems often lack robustness, generalizability, and clinical reliability. This survey provides a comprehensive and methodologically grounded review of multimodal learning for disease diagnosis, emphasizing the paradigm shifts that have emerged over the past five years. Beyond classical early, intermediate, and late fusion strategies, we synthesize modern cross-modal representation learning frameworks, including contrastive alignment, vision–language pretraining, graph and hypergraph-based multimodal reasoning, modality-agnostic representation learning, and missing-modality robust architectures. We further examine large-scale foundation-model style multimodal pretraining and recent advances in histology–transcriptomics and image–omics integration, which exemplify biologically grounded cross-modal learning beyond traditional fusion pipelines. In addition to summarizing widely used datasets and clinical applications across oncology, neurology, cardiology, pulmonology, and ophthalmology, we provide a methodological synthesis linking key challenges such as modality heterogeneity, incomplete data, fairness disparities, interpretability limitations, and cross-institutional distribution shift to representative solution frameworks proposed in the literature. By integrating theoretical formulations, architectural insights, and application-driven evidence, this survey moves beyond case-oriented performance comparisons and offers a structured perspective on how multimodal AI is evolving toward scalable, robust, and clinically trustworthy diagnostic systems.",
+      "citations": 0,
+      "sources": [
+        "DOAJ"
+      ],
+      "type": "article",
+      "openAccess": true,
+      "signal": 82
+    },
+    {
+      "id": "P13",
+      "title": "NS-Dep-KAN: An Explainable Neuro-Symbolic Framework with Kolmogorov–Arnold Networks for DSM-Guided Depression Assessment",
+      "authors": [
+        "Qiong Hong",
+        "Lailatul Qadri Zakaria",
+        "Sabrina Tiun"
+      ],
+      "year": 2026,
+      "venue": "Information",
+      "doi": "10.3390/info17060516",
+      "url": "https://www.mdpi.com/2078-2489/17/6/516",
+      "abstract": "Automated depression assessment is critical for scalable mental healthcare but faces dual challenges: the lack of clinical interpretability in “black-box” deep learning models and the excessive computational cost of large-scale fusion architectures. To bridge this gap, we propose NS-Dep-KAN, a novel neuro-symbolic framework that harmonizes DSM-5-guided reasoning with Kolmogorov–Arnold Networks (KANs). Our approach leverages a Large Language Model (LLM) to extract symbolic symptom evidence aligned with diagnostic criteria, which then guides the aggregation of multimodal features from frozen pretrained encoders (WavLM and Qwen). Unlike traditional Multi-Layer Perceptrons, the proposed KAN prediction head employs learnable B-spline activation functions to capture complex nonlinear symptom–severity mappings with extreme parameter efficiency. Evaluations on the DAIC-WOZ benchmark demonstrate that NS-Dep-KAN achieves state-of-the-art performance among audio-text models (MAE 2.69, 13.5% improvement over the three-modality baseline MSGAF at MAE 3.11), with only ∼4.9 K trainable parameters. Moreover, the framework offers inherent interpretability, revealing granular symptom contribution profiles that align with clinical intuition. This work establishes a path toward explainable trustworthy AI for mental health screening.",
+      "citations": 0,
+      "sources": [
+        "DOAJ"
+      ],
+      "type": "article",
+      "openAccess": true,
+      "signal": 82
+    },
+    {
+      "id": "P14",
+      "title": "Beyond transparency: why Traditional Chinese Medicine (TCM) need explainable artificial intelligence (XAI)",
+      "authors": [
+        "Wanting Zheng",
+        "Yuanyuan Tong",
+        "Jinjian Huang",
+        "Ling Zhu",
+        "Jiaqi Chai"
+      ],
+      "year": 2026,
+      "venue": "Chinese Medicine",
+      "doi": "10.1186/s13020-026-01455-4",
+      "url": "https://doi.org/10.1186/s13020-026-01455-4",
+      "abstract": "Abstract The integration of artificial intelligence (AI) with Traditional Chinese Medicine (TCM) is rapidly expanding, creating new opportunities for digital diagnosis, syndrome differentiation, prescription recommendation, multimodal clinical support, and knowledge mining. The central obstacle to this integration, however, lies beyond predictive performance and stems from a fundamental epistemological mismatch between data-driven AI and theory-driven TCM. Contemporary AI systems often operate through opaque statistical representations, whereas TCM depends on holistic, relational, and interpretive reasoning centered on syndrome differentiation and disease-mechanism inference. Consequently, explainable artificial intelligence (XAI) is required not merely to improve transparency but to serve as an epistemic interface that enables semantic translation between machine-discovered patterns and TCM clinical reasoning. This review argues that AI–TCM integration should be understood as an epistemological integration problem rather than a purely technical one. To address this problem, we introduce two conceptual lenses: the dual-layer opacity framework, which captures the superposition of algorithmic opacity and the theoretical opacity of TCM knowledge, and the semantic translation framework, which conceptualizes XAI as the process of mapping computational features and reasoning traces onto clinically meaningful and theory-consistent TCM concepts. On this basis, we critically synthesize major methodological pathways of TCM-XAI, including feature-attribution methods, visual explanation, intrinsically interpretable models, knowledge-guided reasoning, and large-language-model-based explanation infrastructures such as chain-of-thought and graph-based retrieval-augmented generation. Beyond methodological synthesis, we identify four core criteria for high-quality explanation in TCM: faithfulness, clinical relevance, theoretical coherence, and cultural integrity. We show that the principal challenges of TCM-XAI extend beyond accuracy and include annotation uncertainty, explanation validation, privacy-preserving interpretability, fairness across populations, and the risk of epistemic reduction or cultural misinterpretation. Finally, we outline a future research agenda centered on causal inference, neuro-symbolic reasoning, multimodal explanation benchmarks, clinician-centered evaluation, and regulatory standards for trustworthy TCM-AI systems. We argue that XAI should be understood not as a technical add-on but as the epistemic infrastructure required to build clinically trustworthy, culturally coherent, and scientifically robust AI ecosystems for Traditional Chinese Medicine.",
+      "citations": 0,
+      "sources": [
+        "DOAJ"
+      ],
+      "type": "article",
+      "openAccess": true,
+      "signal": 81
+    },
+    {
+      "id": "P15",
+      "title": "Assessment of visual comfort in urban underground space by multimodal large language model Reasoning",
+      "authors": [
+        "Fu Chai",
+        "Biao Zhou",
+        "Xiongyao Xie",
+        "Longkun Liu"
+      ],
+      "year": 2026,
+      "venue": "Underground Space",
+      "doi": "10.1016/j.undsp.2026.06.005",
+      "url": "https://doi.org/10.1016/j.undsp.2026.06.005",
+      "abstract": "",
+      "citations": 0,
+      "sources": [
+        "Crossref"
+      ],
+      "type": "journal-article",
+      "openAccess": false,
+      "signal": 77
+    },
+    {
+      "id": "P16",
+      "title": "Multimodal Large Language Models for Misinformation Detection and Reasoning",
+      "authors": [
+        "Wenyi Pi"
+      ],
+      "year": 2024,
+      "venue": "Front Matter",
+      "doi": "10.59350/mtep9-gwy69",
+      "url": "https://doi.org/10.59350/mtep9-gwy69",
+      "abstract": "Exploring innovative Strategies in Combating Misinformation with Enhanced Multimodal Understanding Author Wenyi Pi ( <strong> ORCID </strong> : 0009–0002–2884–2771) Introduction Misinformation refers to false or inaccurate information that is often given to someone in a deliberate attempt to make them believe something that is not true. This has a significantly negative impact on public health, political stability and social trust and harmony.",
+      "citations": 0,
+      "sources": [
+        "Crossref"
+      ],
+      "type": "posted-content",
+      "openAccess": false,
+      "signal": 77
+    },
+    {
+      "id": "P17",
+      "title": "Multimodal Large Language Models for Misinformation Detection and Reasoning",
+      "authors": [
+        "Wenyi Pi"
+      ],
+      "year": 2024,
+      "venue": "Front Matter",
+      "doi": "10.59350/ea77s-hdq63",
+      "url": "https://doi.org/10.59350/ea77s-hdq63",
+      "abstract": "Exploring innovative Strategies in Combating Misinformation with Enhanced Multimodal Understanding Author Wenyi Pi ( <strong> ORCID </strong> : 0009–0002–2884–2771) Introduction Misinformation refers to false or inaccurate information that is often given to someone in a deliberate attempt to make them believe something that is not true. This has a significantly negative impact on public health, political stability and social trust and harmony.",
+      "citations": 0,
+      "sources": [
+        "Crossref"
+      ],
+      "type": "posted-content",
+      "openAccess": false,
+      "signal": 77
+    },
+    {
+      "id": "P18",
+      "title": "Towards Reliable Fine-Grained Visual Reasoning in Multimodal Large Language Models from a Data-Centric Perspective",
+      "authors": [
+        "Tianyi Bai"
+      ],
+      "year": null,
+      "venue": "The Hong Kong University of Science and Technology Library",
+      "doi": "10.14711/thesis-hdl174546",
+      "url": "https://doi.org/10.14711/thesis-hdl174546",
+      "abstract": "",
+      "citations": 0,
+      "sources": [
+        "Crossref"
+      ],
+      "type": "dissertation",
+      "openAccess": false,
+      "signal": 67
+    }
+  ],
+  "analysis": {
+    "papers": {
+      "P1": {
+        "keyPoints": [
+          "提出MOGPT框架，将多模态数据处理与时序因果发现模块、催化演化知识图谱和因果一致性损失相结合。",
+          "构建了跨多种催化剂体系的大规模因果问答对数据集用于基准测试。",
+          "报告在时空推理、因果推断与性能预测上表现优越，并保持鲁棒性与泛化性。"
+        ],
+        "method": "基于大语言模型的框架，集成时序因果发现模块、催化演化知识图谱与因果一致性损失，并构建因果问答数据集。",
+        "finding": "在时空推理、因果推断与性能预测上优于基线，并具备较强鲁棒性与泛化能力。",
+        "limitation": "摘要未说明推理忠实性的验证方式，也未报告对抗条件下的失效分析。"
+      },
+      "P2": {
+        "keyPoints": [
+          "指出多数深度学习诊断方法为黑箱图像分类，可解释性与临床可信度不足。",
+          "提出两阶段可信诊断范式：先由视觉-语言模型产出结构化影像征象证据，再由多模态大模型整合推理。",
+          "诊断过程受证据约束，与放射科临床工作流对齐。"
+        ],
+        "method": "两阶段证据引导范式：视觉-语言模型提取结构化放射学征象，多模态大模型基于证据进行诊断推理。",
+        "finding": "框架旨在提升可解释性与临床可信度，摘要未给出量化结果。",
+        "limitation": "摘要被截断，未报告完整实验数据与失败案例分析。"
+      },
+      "P3": {
+        "keyPoints": [
+          "针对病理AI黑箱问题，提出生成透明、证据关联推理以支持诊断审计的框架。",
+          "采用两阶段自学习流程，在不更新模型权重的前提下从少量标注子集推导诊断标准。",
+          "引入病理学家反馈使生成描述符合医学标准。",
+          "报告在正常组织与浸润癌区分上准确率超过90%，并能自主识别核异型等组织学特征。"
+        ],
+        "method": "两阶段自学习加专家反馈，驱动现成多模态大模型从被动模式识别转向主动诊断推理，不更新权重。",
+        "finding": "产出可审计的推理依据，二分类准确率超90%，并可区分导管原位癌等复杂亚型。",
+        "limitation": "依赖少量标注子集与专家反馈，摘要未说明推理依据是否经过系统性忠实性验证。"
+      },
+      "P4": {
+        "keyPoints": [
+          "指出LLM与多模态基础模型的黑箱性与噪声/对抗条件下的脆弱性阻碍其在安全关键医疗场景部署。",
+          "Med-AgentX通过跨模态注意力融合临床文本、影像与结构化数据，并用强化学习策略优化诊断准确率、鲁棒性与解释保真度。",
+          "引入人在回路反馈对齐临床专家经验。",
+          "基准实验显示预测准确率与鲁棒性优于强基线，解释理由获临床医生验证。"
+        ],
+        "method": "多模态LLM智能体框架，结合强化学习策略与基于归因的可解释性，并加入人在回路反馈。",
+        "finding": "在基准数据集上准确率与鲁棒性优于强基线，并提供经临床医生验证的可解释理由。",
+        "limitation": "摘要未披露对抗攻击类型、基准数据集名称及解释保真度的具体度量。"
+      },
+      "P5": {
+        "keyPoints": [
+          "综述LLM在电力与能源系统中用于预测、监测、诊断与决策支持时的幻觉、偏见、可解释性、网络安全与问责问题。",
+          "综合126篇文献，比较领域适配模型、检索增强生成、多模态与推理模型、智能体系统等范式。",
+          "提出多层治理框架，整合数据与模型治理、确定性工程验证、网络安全保障、人类授权与可审计性。"
+        ],
+        "method": "结构化范围综述与批判性综述，辅以定量发表趋势与比较证据分析。",
+        "finding": "识别出方法论与部署层面的文献空白，并提出多层治理框架。",
+        "limitation": "为综述性工作，未提供新的一手实验证据。"
+      },
+      "P6": {
+        "keyPoints": [
+          "广告信息常通过文本、图像与情感间接传达，传统模型难以捕捉隐式意图。",
+          "提出多轮提示设计，以GPT-4为核心推理引擎，引导模型分阶段迭代推理并融合文本与视觉线索。",
+          "构建自建广告数据集，并提出超越传统准确率、纳入类人推理评估的新指标。"
+        ],
+        "method": "基于GPT-4的多轮提示工程方法，配合自建广告数据集与新型评估指标。",
+        "finding": "推理准确率较基线显著提升，新指标可评估类人推理质量。",
+        "limitation": "摘要被截断，未说明指标的具体构造与人工评估的一致性。"
+      },
+      "P7": {
+        "keyPoints": [
+          "区块链服务安全面临欺诈、洗钱与网络攻击威胁，现有分析工具泛化性、推理能力与适应性不足。",
+          "系统综述LLM在事前智能合约审计、事中异常检测、事后跨链行为关联三方面的应用进展。",
+          "强调LLM的自然语言理解、知识推理与多模态整合能力为区块链安全提供新路径。"
+        ],
+        "method": "系统性综述，按事前/事中/事后三阶段组织LLM在区块链安全中的应用。",
+        "finding": "归纳了LLM赋能区块链安全的现状、挑战与机会，摘要未给出量化结论。",
+        "limitation": "综述性质，未提供统一评测基准或实证对比。"
+      },
+      "P8": {
+        "keyPoints": [
+          "提出DermaGPT联邦多模态框架，以PaLI-Gemma 2视觉-语言骨干加LoRA微调，并结合检索增强LLM生成临床连贯解释。",
+          "元学习信任函数（MLTF）依据不确定性、校准度与域偏移指标动态重加权客户端更新。",
+          "在四个机构数据集与4,452例活检确诊图像上达到90.2%诊断准确率（11类病变）与93.3%恶性预测准确率。",
+          "专家对解释清晰度与临床相关性的评分基于类别级典型样本而非逐图评估。"
+        ],
+        "method": "联邦多模态框架：LoRA微调的视觉-语言骨干加检索增强LLM，配合元学习信任函数进行客户端更新重加权。",
+        "finding": "跨机构诊断准确率90.2%、恶性预测93.3%，联邦训练下输出校准良好。",
+        "limitation": "解释质量评估仅在类别级典型样本上进行，未做逐图解释验证。"
+      },
+      "P9": {
+        "keyPoints": [
+          "综述LLM与MLLM在医疗、教育、工业、治理、安全、辅助系统、科研与创意媒体等领域的应用与挑战。",
+          "梳理模型架构、多模态融合技术、训练方法与领域适配方式，并总结主要基准数据集与评测方法。",
+          "指出数据不一致、对齐可扩展性、计算成本、隐私、偏见与可解释性等主要挑战。"
+        ],
+        "method": "跨领域综述，覆盖架构、融合、训练、基准与评估方法。",
+        "finding": "总结现有多模态模型能力与实用局限，并讨论主要挑战。",
+        "limitation": "综述层面，未提出统一的可信推理评测协议。"
+      },
+      "P10": {
+        "keyPoints": [
+          "指出多模态数据（文本、图像、音频）的有效整合与推理仍是难题。",
+          "提出联邦示例选择算法，兼顾数据隐私、多样性与代表性。",
+          "在Llama上改造并实验，报告准确率、精确率、召回率与F1均有提升，并验证大规模数据集上的可扩展性。"
+        ],
+        "method": "在开源LLM（Llama）上引入联邦示例选择算法，包含安全数据收集、算法设计与迭代精炼。",
+        "finding": "在多项任务上准确率、精确率、召回率与F1优于当时最优模型。",
+        "limitation": "摘要未说明所选示例对推理过程忠实性的影响，也未报告对抗鲁棒性评估。"
+      },
+      "P11": {
+        "keyPoints": [
+          "社交媒体信息多为高噪声短文本，传统舆情分析方法在事件检测、演化追踪与真实性判断上局限明显。",
+          "综述覆盖事件检测任务分类与生命周期理论、统计与传统机器学习方法、深度语义与时序建模、多源信息与关系建模、大模型与开放学习方法。",
+          "系统梳理主流评估指标与常用数据集。"
+        ],
+        "method": "系统性综述与对比分析。",
+        "finding": "归纳舆情事件检测技术发展脉络与主流评测资源，摘要未给出量化结论。",
+        "limitation": "聚焦舆情监测，未涉及多模态大模型推理忠实性的验证方法。"
+      },
+      "P12": {
+        "keyPoints": [
+          "临床决策本质上是多模态的，单模态系统常缺乏鲁棒性、泛化性与临床可靠性。",
+          "综述早期/中期/晚期融合之外的跨模态表示学习框架，包括对比对齐、视觉-语言预训练、图与超图多模态推理、模态无关表示与缺失模态鲁棒架构。",
+          "考察大规模基础模型式多模态方法在疾病诊断中的进展。"
+        ],
+        "method": "方法学导向的综述，按融合策略与跨模态表示学习框架组织。",
+        "finding": "指出多模态学习是提升临床可靠性的关键方向，并总结范式转变。",
+        "limitation": "综述性质，未提供可信推理的实证评测结果。"
+      },
+      "P13": {
+        "keyPoints": [
+          "针对抑郁评估中深度模型缺乏临床可解释性与大规模融合架构计算成本高的问题，提出神经符号框架NS-Dep-KAN。",
+          "用LLM提取与DSM-5诊断标准对齐的符号化症状证据，指导冻结预训练编码器（WavLM、Qwen）的多模态特征聚合。",
+          "KAN预测头以可学习B样条激活函数建模症状-严重度非线性映射，仅约4.9K可训练参数。",
+          "在DAIC-WOZ上MAE 2.69，较三模态基线MSGAF（MAE 3.11）提升13.5%。"
+        ],
+        "method": "神经符号框架：LLM抽取DSM-5对齐的符号症状证据，指导冻结编码器特征聚合，KAN头做预测。",
+        "finding": "DAIC-WOZ上MAE 2.69，较MSGAF提升13.5%，且参数极少并具内在可解释性。",
+        "limitation": "仅在单一基准DAIC-WOZ上评估，符号证据抽取的可靠性未单独验证。"
+      },
+      "P14": {
+        "keyPoints": [
+          "AI与中医整合的核心障碍不是预测性能，而是数据驱动AI与理论驱动中医之间的认识论错配。",
+          "主张XAI不仅是提升透明度，更应作为机器发现模式与中医临床推理之间的语义翻译接口。",
+          "提出双层不透明性框架等两个概念透镜来分析该问题。"
+        ],
+        "method": "理论综述与概念框架构建。",
+        "finding": "论证AI-中医整合应被理解为认识论整合问题而非纯技术问题。",
+        "limitation": "概念性工作，未提供实证验证或可操作评测指标。"
+      },
+      "P15": {
+        "keyPoints": [
+          "标题指向以多模态大模型推理评估城市地下空间视觉舒适度。",
+          "摘要缺失，仅能依据标题作主题级判断。"
+        ],
+        "method": "Not stated in available metadata",
+        "finding": "Not stated in available metadata",
+        "limitation": "摘要为空，无法评估方法、结果与局限。"
+      },
+      "P16": {
+        "keyPoints": [
+          "主题为利用增强的多模态理解能力检测与推理虚假信息。",
+          "摘要仅为引言片段，指出虚假信息对公共卫生、政治稳定与社会信任有负面影响。"
+        ],
+        "method": "Not stated in available metadata",
+        "finding": "Not stated in available metadata",
+        "limitation": "摘要过短，仅有问题陈述，无方法与结果信息。"
+      },
+      "P17": {
+        "keyPoints": [
+          "与P16为同一标题、同一作者的重复条目，内容为虚假信息检测与推理的引言片段。",
+          "摘要仅陈述虚假信息的负面影响，未给出方法或实验。"
+        ],
+        "method": "Not stated in available metadata",
+        "finding": "Not stated in available metadata",
+        "limitation": "摘要过短且与P16重复，无法提取独立证据。"
+      },
+      "P18": {
+        "keyPoints": [
+          "标题指向从数据中心视角提升多模态大模型细粒度视觉推理的可靠性。",
+          "摘要缺失，仅能依据标题判断其关注数据层面的细粒度视觉推理可靠性。"
+        ],
+        "method": "Not stated in available metadata",
+        "finding": "Not stated in available metadata",
+        "limitation": "摘要为空，无法评估具体方法与结论。"
+      }
+    },
+    "themes": [
+      {
+        "name": "证据约束与可审计的推理链",
+        "summary": "多篇工作把可信推理落实为“先产出结构化证据、再基于证据推理”的流程：P2用视觉-语言模型提取放射学征象约束诊断，P3生成证据关联的可审计理由，P13用LLM抽取DSM-5对齐的符号症状证据指导特征聚合。其共同点是以中间证据作为可检查的推理锚点，而非直接输出黑箱结论。",
+        "paperIds": [
+          "P2",
+          "P3",
+          "P13"
+        ]
+      },
+      {
+        "name": "可解释性与人类反馈驱动的可信增强",
+        "summary": "P4、P8、P14均把可解释性视为可信部署的前提，但路径不同：P4用强化学习优化解释保真度并引入人在回路，P8用检索增强生成解释并以专家评分验证，P14则主张XAI应承担认识论翻译功能。三者共同强调解释需与领域专家标准对齐。",
+        "paperIds": [
+          "P4",
+          "P8",
+          "P14"
+        ]
+      },
+      {
+        "name": "幻觉、虚假信息与安全治理",
+        "summary": "P5、P16/P17、P7从不同场景讨论模型输出的不可靠性：P5关注电力系统中幻觉与问责，P16/P17关注多模态虚假信息检测，P7关注区块链服务安全中的推理能力不足。它们共同表明幻觉与恶意信息是跨领域共性风险，需要治理与检测机制配套。",
+        "paperIds": [
+          "P5",
+          "P16",
+          "P17",
+          "P7"
+        ]
+      },
+      {
+        "name": "鲁棒性、对抗条件与联邦隐私约束",
+        "summary": "P4指出模型在噪声与对抗条件下脆弱，P8用元学习信任函数按不确定性与域偏移重加权客户端更新，P10用联邦示例选择兼顾隐私与多样性。三者显示鲁棒性提升常与隐私约束、跨机构异构数据同时被处理。",
+        "paperIds": [
+          "P4",
+          "P8",
+          "P10"
+        ]
+      },
+      {
+        "name": "评测方法与基准的碎片化",
+        "summary": "P6提出超越准确率的类人推理评估指标，P11梳理舆情事件检测的主流指标与数据集，P9总结多模态基准与评估方法，P1构建因果问答基准。这些工作显示评测资源按领域各自构建，尚缺跨领域统一的可信推理评测协议。",
+        "paperIds": [
+          "P6",
+          "P11",
+          "P9",
+          "P1"
+        ]
+      }
+    ],
+    "consensus": [
+      "多模态大模型的黑箱特性被视为临床与安全关键场景部署的主要障碍，需要可解释的中间证据或理由 [P2][P3][P4][P14]",
+      "引入领域专家反馈或与领域标准对齐可提升输出可信度 [P3][P4][P8][P13]",
+      "模型在噪声、对抗或跨机构异构数据下存在脆弱性，需要鲁棒性机制 [P4][P8][P10]",
+      "幻觉与虚假信息是跨领域共性风险，需要检测与治理配套 [P5][P7][P16][P17]"
+    ],
+    "tensions": [
+      "P4与P8均声称解释经专家验证，但P8明确其专家评分基于类别级典型样本而非逐图评估，说明“解释可信”的验证粒度在不同工作间并不一致 [P4][P8]",
+      "P3强调不更新模型权重即可获得可审计推理，而P4与P8分别依赖强化学习策略优化与LoRA微调来提升可信度，反映“轻量适配”与“训练式对齐”两条路线取向不同 [P3][P4][P8]",
+      "P14主张XAI的核心是认识论层面的语义翻译，而非透明度本身，这与P2、P4把可解释性主要作为工程属性（证据约束、归因解释）处理的取向存在张力 [P14][P2][P4]"
+    ],
+    "gaps": [
+      {
+        "title": "推理忠实性缺乏独立于准确率的验证",
+        "detail": "多篇工作以准确率或专家主观评分为主要证据，未报告推理链是否真实驱动预测；P8自承解释评估仅在类别级样本上进行，P3未说明推理依据的忠实性检验方式。",
+        "evidenceIds": [
+          "P3",
+          "P8",
+          "P4"
+        ]
+      },
+      {
+        "title": "对抗鲁棒性评估缺少统一威胁模型",
+        "detail": "P4仅笼统提及噪声与对抗条件下的脆弱性，未披露攻击类型与基准；P5从治理角度讨论网络安全但未给出实证攻击评测，导致跨研究难以比较鲁棒性。",
+        "evidenceIds": [
+          "P4",
+          "P5"
+        ]
+      },
+      {
+        "title": "跨领域可信推理评测协议缺失",
+        "detail": "P1、P6、P11各自构建领域专用数据集与指标，P9仅做综述性梳理，尚无共享基准可同时衡量忠实性、事实性与鲁棒性。",
+        "evidenceIds": [
+          "P1",
+          "P6",
+          "P9",
+          "P11"
+        ]
+      },
+      {
+        "title": "多模态虚假信息检测缺乏可复现的方法证据",
+        "detail": "P16与P17为同一标题的重复条目且摘要仅为引言片段，未提供方法、数据集或结果，该方向在语料中缺乏可核验的实证支撑。",
+        "evidenceIds": [
+          "P16",
+          "P17"
+        ]
+      },
+      {
+        "title": "部分条目的证据不可用",
+        "detail": "P15与P18摘要为空，P16/P17摘要过短，无法评估其方法、结果与局限，相关主题判断只能停留在标题层面。",
+        "evidenceIds": [
+          "P15",
+          "P18",
+          "P16",
+          "P17"
+        ]
+      }
+    ],
+    "keywords": [
+      "多模态大模型",
+      "推理忠实性",
+      "幻觉与事实性",
+      "可解释性",
+      "对抗鲁棒性",
+      "证据约束推理",
+      "联邦学习",
+      "可信评测基准",
+      "临床决策支持",
+      "虚假信息检测"
+    ],
+    "mode": "llm"
+  },
+  "brief": {
+    "title": "从证据锚点到忠实性验证：多模态大模型可信推理的进展与缺口",
+    "standfirst": "证据约束推理已成主流路径，但忠实性验证与统一评测仍缺位。",
+    "scope": "本简报基于检索到的18条文献元数据（含重复条目与摘要缺失条目），覆盖2024至2026年间的多模态大模型可信推理相关工作，重点梳理证据约束推理、可解释性与人类反馈、幻觉与安全治理、鲁棒性与联邦隐私、评测方法五个主题。简报不声称穷尽该领域文献，部分条目的判断仅能依据标题或片段摘要作出。",
+    "keyThemes": [
+      {
+        "name": "证据约束与可审计的推理链",
+        "insight": "多篇工作把可信推理落实为“先产出结构化证据、再基于证据推理”的流程。P2用视觉-语言模型提取放射学征象约束诊断推理，P3生成证据关联的可审计理由并引入病理学家反馈，P13用LLM抽取DSM-5对齐的符号症状证据指导特征聚合。三者的共同点是以中间证据作为可检查的推理锚点，而非直接输出黑箱结论。但P3与P13均未单独验证证据抽取环节本身的可靠性，证据链的可审计性不等于推理的忠实性。",
+        "paperIds": [
+          "P2",
+          "P3",
+          "P13"
+        ]
+      },
+      {
+        "name": "可解释性与人类反馈驱动的可信增强",
+        "insight": "P4、P8、P14均把可解释性视为可信部署的前提，但路径不同。P4用强化学习优化解释保真度并引入人在回路反馈，P8用检索增强生成解释并以专家评分验证，P14则主张XAI应承担数据驱动模型与理论驱动领域知识之间的认识论翻译功能。三者共同强调解释需与领域专家标准对齐，但P8自承其专家评分基于类别级典型样本而非逐图评估，说明对齐的验证粒度仍不统一。",
+        "paperIds": [
+          "P4",
+          "P8",
+          "P14"
+        ]
+      },
+      {
+        "name": "幻觉、虚假信息与安全治理",
+        "insight": "P5、P16/P17、P7从不同场景讨论模型输出的不可靠性。P5关注电力与能源系统中幻觉、偏见与问责问题并提出多层治理框架，P16/P17关注多模态虚假信息检测，P7关注区块链服务安全中现有工具推理能力不足。它们共同表明幻觉与恶意信息是跨领域共性风险，需要检测与治理机制配套。但P16与P17为同一标题的重复条目且摘要仅为引言片段，该方向在本语料中缺乏可核验的实证支撑。",
+        "paperIds": [
+          "P5",
+          "P16",
+          "P17",
+          "P7"
+        ]
+      },
+      {
+        "name": "鲁棒性、对抗条件与联邦隐私约束",
+        "insight": "P4指出模型在噪声与对抗条件下脆弱，并用强化学习策略优化鲁棒性；P8用元学习信任函数按不确定性、校准度与域偏移重加权客户端更新；P10用联邦示例选择兼顾隐私与多样性。三者显示鲁棒性提升常与隐私约束、跨机构异构数据同时被处理。不过P4未披露对抗攻击类型与基准数据集，P10未报告对抗鲁棒性评估，跨研究的鲁棒性结论难以直接比较。",
+        "paperIds": [
+          "P4",
+          "P8",
+          "P10"
+        ]
+      },
+      {
+        "name": "评测方法与基准的碎片化",
+        "insight": "P6提出超越准确率、纳入类人推理质量的评估指标，P11梳理舆情事件检测的主流指标与数据集，P9总结多模态基准与评估方法，P1构建跨催化剂体系的因果问答基准。这些工作显示评测资源按领域各自构建，指标口径互不相同。据本简报综合判断，目前尚缺可同时衡量忠实性、事实性与鲁棒性的跨领域可信推理评测协议。",
+        "paperIds": [
+          "P6",
+          "P11",
+          "P9",
+          "P1"
+        ]
+      }
+    ],
+    "consensus": [
+      "多模态大模型的黑箱特性被视为临床与安全关键场景部署的主要障碍，需要可解释的中间证据或理由 [P2][P3][P4][P14]",
+      "引入领域专家反馈或与领域标准对齐可提升输出可信度 [P3][P4][P8][P13]",
+      "模型在噪声、对抗或跨机构异构数据下存在脆弱性，需要鲁棒性机制 [P4][P8][P10]",
+      "幻觉与虚假信息是跨领域共性风险，需要检测与治理配套 [P5][P7][P16][P17]"
+    ],
+    "tensions": [
+      "P4与P8均声称解释经专家验证，但P8明确其专家评分基于类别级典型样本而非逐图评估，说明“解释可信”的验证粒度在不同工作间并不一致 [P4][P8]",
+      "P3强调不更新模型权重即可获得可审计推理，而P4与P8分别依赖强化学习策略优化与LoRA微调来提升可信度，反映“轻量适配”与“训练式对齐”两条路线取向不同 [P3][P4][P8]",
+      "P14主张XAI的核心是认识论层面的语义翻译而非透明度本身，这与P2、P4把可解释性主要作为工程属性（证据约束、归因解释）处理的取向存在张力 [P14][P2][P4]"
+    ],
+    "painPoints": [
+      {
+        "title": "推理忠实性缺乏独立于准确率的验证",
+        "detail": "多篇工作以准确率或专家主观评分为主要证据，未报告推理链是否真实驱动预测。P8自承解释评估仅在类别级典型样本上进行，P3未说明推理依据的忠实性检验方式，P4未披露解释保真度的具体度量。这使得“可解释”与“忠实”之间的差距无法量化。",
+        "evidenceIds": [
+          "P3",
+          "P8",
+          "P4"
+        ],
+        "opportunity": "设计干预式忠实性测试：在推理链中注入错误证据或删除关键证据，观察预测是否随之改变，并报告忠实性指标与准确率的联合曲线。"
+      },
+      {
+        "title": "对抗鲁棒性评估缺少统一威胁模型",
+        "detail": "P4仅笼统提及噪声与对抗条件下的脆弱性，未披露攻击类型与基准数据集；P5从治理角度讨论网络安全但未给出实证攻击评测。缺乏共享的威胁模型使跨研究的鲁棒性结论难以比较，也难以判断治理框架是否覆盖真实攻击面。",
+        "evidenceIds": [
+          "P4",
+          "P5"
+        ],
+        "opportunity": "为多模态临床与安全场景建立分层威胁模型（像素扰动、文本注入、跨模态错配、证据伪造），并在同一基准上报告各方法的失效模式。"
+      },
+      {
+        "title": "跨领域可信推理评测协议缺失",
+        "detail": "P1、P6、P11各自构建领域专用数据集与指标，P9仅做综述性梳理，尚无共享基准可同时衡量忠实性、事实性与鲁棒性。评测碎片化导致可信推理的进展难以横向累积，也使治理框架缺少可验证的度量支撑。",
+        "evidenceIds": [
+          "P1",
+          "P6",
+          "P9",
+          "P11"
+        ],
+        "opportunity": "构建一个多领域可信推理评测套件，统一报告忠实性、事实性、校准度与对抗鲁棒性四项指标，并公开评分脚本与失败案例库。"
+      },
+      {
+        "title": "多模态虚假信息检测缺乏可复现的方法证据",
+        "detail": "P16与P17为同一标题的重复条目且摘要仅为引言片段，未提供方法、数据集或结果。该方向在本语料中缺乏可核验的实证支撑，无法判断现有多模态模型在虚假信息推理上的真实能力边界。",
+        "evidenceIds": [
+          "P16",
+          "P17"
+        ],
+        "opportunity": "以公开多模态虚假信息数据集为基准，系统评测主流多模态大模型的检测与推理表现，并报告其解释理由与真实证据的一致性。"
+      },
+      {
+        "title": "部分条目的证据不可用",
+        "detail": "P15与P18摘要为空，P16/P17摘要过短，无法评估其方法、结果与局限，相关主题判断只能停留在标题层面。这限制了本简报对城市地下空间视觉舒适度评估与数据中心视角细粒度视觉推理两个方向的判断力。",
+        "evidenceIds": [
+          "P15",
+          "P18",
+          "P16",
+          "P17"
+        ],
+        "opportunity": "在后续检索中优先补齐这些条目的全文或摘要，并核实P16与P17是否为同一工作的重复收录，避免重复计数影响证据权重。"
+      }
+    ],
+    "futureDirections": [
+      {
+        "title": "证据链的端到端忠实性审计",
+        "detail": "在P2、P3、P13的证据约束范式基础上，增加对证据抽取环节的独立验证：检查抽取的征象或症状是否真实存在于输入中，以及最终结论是否随证据变化而相应变化。",
+        "evidenceIds": [
+          "P2",
+          "P3",
+          "P13"
+        ]
+      },
+      {
+        "title": "解释验证从类别级走向逐图级",
+        "detail": "针对P8暴露的评估粒度问题，建立逐图解释验证流程，要求专家对单张图像的生成理由逐条判定相关性与充分性，并报告评分者一致性。",
+        "evidenceIds": [
+          "P8",
+          "P4"
+        ]
+      },
+      {
+        "title": "隐私约束下的鲁棒可信训练",
+        "detail": "将P8的元学习信任函数与P10的联邦示例选择结合，在跨机构异构数据上同时优化校准度、对抗鲁棒性与解释质量，并报告三者的权衡曲线。",
+        "evidenceIds": [
+          "P8",
+          "P10"
+        ]
+      },
+      {
+        "title": "治理框架与实证评测对接",
+        "detail": "把P5提出的多层治理框架中的可审计性要求转化为可测量的评测项，例如要求模型输出附带可核验的证据引用，并在电力等安全关键场景中做小规模实证。",
+        "evidenceIds": [
+          "P5"
+        ]
+      }
+    ],
+    "readingPath": [
+      {
+        "paperId": "P9",
+        "why": "先读这篇跨领域综述，建立多模态大模型架构、融合方式与主要挑战的整体地图，为后续精读提供坐标系。"
+      },
+      {
+        "paperId": "P2",
+        "why": "作为证据约束推理的代表，理解“先提取结构化征象、再推理”的两阶段范式，这是本领域最主流的可信化路径。"
+      },
+      {
+        "paperId": "P3",
+        "why": "紧接着读P3，看同一范式如何在病理领域以不更新权重的方式实现可审计推理，并与P2对比证据粒度的差异。"
+      },
+      {
+        "paperId": "P4",
+        "why": "转入训练式对齐路线，理解强化学习优化解释保真度与人在回路的做法，与P3的轻量适配形成对照。"
+      },
+      {
+        "paperId": "P8",
+        "why": "读P8以掌握联邦场景下的信任函数与解释评估实践，特别注意其专家评分仅在类别级样本上进行的局限。"
+      },
+      {
+        "paperId": "P13",
+        "why": "通过神经符号框架看符号证据如何与冻结编码器结合，理解可解释性与参数效率可以同时达成的一种设计。"
+      },
+      {
+        "paperId": "P5",
+        "why": "最后读治理综述，把前述技术方案放回问责、审计与安全部署的制度语境中，形成从方法到治理的完整视角。"
+      }
+    ],
+    "methodNotes": [
+      "语料由检索阶段返回的18条文献元数据构成，包含标题、年份、发表venue、DOI与链接，未提供检索式、数据库名称与筛选流程细节。",
+      "证据分析对每条文献提取了方法、发现与局限，其中P15、P18摘要为空，P16、P17摘要仅为引言片段，相关判断仅能依据标题作出。",
+      "P16与P17标题与作者相同，按重复条目处理，未合并计数，也未将其作为独立证据使用。"
+    ],
+    "caveats": [
+      "本简报不声称穷尽该领域文献，覆盖范围受限于检索窗口与返回的18条元数据。",
+      "多条文献为预印本或摘要被截断，量化结果与实验细节无法核验，相关结论应视为待验证。",
+      "P15、P18摘要缺失，P16、P17摘要过短且重复，本简报对虚假信息检测与细粒度视觉推理方向的判断力有限。",
+      "部分文献发表于2026年，引用与复现情况尚不充分，存在引用滞后风险。",
+      "文中标注为“本简报综合判断”的表述属于编辑推断，而非任何单篇论文的实证结论。"
+    ],
+    "mode": "llm"
+  },
+  "quality": {
+    "confidence": "high",
+    "checks": [
+      {
+        "label": "引用解析",
+        "status": "pass",
+        "detail": "11 条不重复引用全部指向已检索文献。"
+      },
+      {
+        "label": "阅读路径",
+        "status": "pass",
+        "detail": "7 篇文献已排成阅读顺序。"
+      },
+      {
+        "label": "摘要覆盖",
+        "status": "pass",
+        "detail": "18 篇文献中有 16 篇提供可用摘要。"
+      },
+      {
+        "label": "来源广度",
+        "status": "pass",
+        "detail": "3 个来源均返回记录。"
+      },
+      {
+        "label": "综合模式",
+        "status": "pass",
+        "detail": "本地预置的模型输出，用于原型演示，不发起实时 API 调用。"
+      }
+    ],
+    "abstractCoverage": 0.89,
+    "sourceCount": 3,
+    "paperCount": 18,
+    "citedPapers": 11,
+    "invalidCitations": [],
+    "mode": "llm",
+    "tokens": {
+      "promptTokens": 10296,
+      "completionTokens": 6862,
+      "totalTokens": 17158
+    },
+    "generatedAt": "2026-11-02T09:00:00.000Z",
+    "durationMs": 12800
+  },
+  "stats": {
+    "papers": 18,
+    "withAbstract": 16,
+    "openAccess": 10,
+    "citations": 1,
+    "yearMin": 2024,
+    "yearMax": 2026
+  },
+  "sources": [
+    {
+      "id": "semanticscholar",
+      "name": "Semantic Scholar",
+      "role": "引用感知学术图谱",
+      "status": "done",
+      "count": 30,
+      "ms": 1180
+    },
+    {
+      "id": "doaj",
+      "name": "DOAJ",
+      "role": "开放获取期刊",
+      "status": "done",
+      "count": 10,
+      "ms": 420
+    },
+    {
+      "id": "crossref",
+      "name": "Crossref",
+      "role": "DOI 元数据",
+      "status": "done",
+      "count": 10,
+      "ms": 560
+    }
+  ],
+  "meta": {
+    "startedAt": 1793119511401,
+    "durationMs": 12800,
+    "model": "local-demo",
+    "llm": true,
+    "generatedAt": "2026-11-02T09:00:00.000Z"
+  },
+  "demo": {
+    "scenario": "研究生开题",
+    "corpus": "18 篇本地预置文献",
+    "network": false
+  }
+}

@@ -25,7 +25,8 @@ export const AGENT_LABEL: Record<string, string> = {
   critic: '引用核查',
   scouts: '检索智能体',
   runtime: '运行时',
-  model: '模型'
+  model: '模型',
+  demo: '本地演示'
 };
 
 export function statusLabel(stage: Stage): string {
