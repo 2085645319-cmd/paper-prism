@@ -7,6 +7,7 @@ import { runScouts } from './scout.mjs';
 import { runAnalyst } from './analyst.mjs';
 import { runSynthesizer } from './synthesizer.mjs';
 import { runCritic } from './critic.mjs';
+import { withGapProvenance } from './gapProvenance.mjs';
 
 export const AGENT_STAGES = [
   { id: 'planner', name: '规划智能体', role: '拆解研究问题', short: 'PLAN' },
@@ -83,7 +84,8 @@ export async function runResearch(job) {
     });
     job.emit('analysis', { analysis });
 
-    const brief = await runSynthesizer({ topic: job.topic, plan, papers, analysis, llm, job });
+    const draftBrief = await runSynthesizer({ topic: job.topic, plan, papers, analysis, llm, job });
+    const brief = await withGapProvenance(draftBrief, analysis, papers, llm, job);
     job.emit('stage', {
       id: 'synthesizer',
       status: 'done',

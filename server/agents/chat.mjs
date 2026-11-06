@@ -18,7 +18,7 @@ function compactBrief(brief) {
     keyThemes: brief.keyThemes.map(theme => ({ name: theme.name, insight: theme.insight })),
     consensus: brief.consensus,
     tensions: brief.tensions,
-    painPoints: brief.painPoints.map(pain => ({ title: pain.title, detail: pain.detail, opportunity: pain.opportunity })),
+    painPoints: brief.painPoints.map(pain => ({ title: pain.title, detail: pain.detail, opportunity: pain.opportunity, provenance: pain.provenance })),
     futureDirections: brief.futureDirections,
     readingPath: brief.readingPath
   };

@@ -120,7 +120,14 @@ function buildMarkdown(result: ResearchResult) {
   lines.push('## 分歧', ...result.brief.tensions.map(item => `- ${item}`), '');
   lines.push('## 未解问题', '');
   result.brief.painPoints.forEach((pain, index) => {
-    lines.push(`### ${index + 1}. ${pain.title}`, pain.detail, `证据： ${pain.evidenceIds.join(', ')}`, `研究切口： ${pain.opportunity}`, '');
+    lines.push(`### ${index + 1}. ${pain.title}`, pain.detail, `证据： ${pain.evidenceIds.join(', ')}`);
+    if (pain.provenance) {
+      lines.push(`**缺口来源：** ${pain.provenance.label} · ${pain.provenance.strength === 'strong' ? '强' : pain.provenance.strength === 'medium' ? '中' : '弱'}证据`, pain.provenance.summary);
+      for (const quote of pain.provenance.quotes) {
+        lines.push(`> ${quote.paperId}: “${quote.quote}”`);
+      }
+    }
+    lines.push(`研究切口： ${pain.opportunity}`, '');
   });
   lines.push('## 阅读路径', '');
   result.brief.readingPath.forEach((item, index) => {

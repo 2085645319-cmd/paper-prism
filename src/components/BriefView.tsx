@@ -56,6 +56,14 @@ export function BriefView({
   const yearMax = years.length ? Math.max(...years) : null;
   const recentCutoff = new Date().getFullYear() - 1;
   const recentCount = papers.filter(paper => paper.year && paper.year >= recentCutoff).length;
+  const provenanceCounts = brief.painPoints.reduce(
+    (counts, pain) => {
+      if (pain.provenance) counts[pain.provenance.kind] += 1;
+      return counts;
+    },
+    { 'author-stated': 0, 'cross-paper': 0, 'model-inferred': 0 } as Record<string, number>
+  );
+  const hasProvenance = brief.painPoints.some(pain => pain.provenance);
 
   return (
     <div className="brief">
@@ -165,6 +173,15 @@ export function BriefView({
           </div>
           <span className="section-note">{brief.painPoints.length} 个缺口</span>
         </div>
+        {hasProvenance && (
+          <div className="gap-provenance-summary">
+            <span className="mono-label">缺口来源</span>
+            <span className="gap-count author-stated"><b>{provenanceCounts['author-stated']}</b> 作者自述</span>
+            <span className="gap-count cross-paper"><b>{provenanceCounts['cross-paper']}</b> 跨论文空白</span>
+            <span className="gap-count model-inferred"><b>{provenanceCounts['model-inferred']}</b> 模型推断</span>
+            <span className="gap-summary-note">作者自述最硬，模型推断需要回原文核实</span>
+          </div>
+        )}
         <div className="pain-list">
           {brief.painPoints.map((pain, index) => (
             <article className="pain-card" key={`${pain.title}-${index}`}>
@@ -174,6 +191,38 @@ export function BriefView({
                 <SourceChips ids={pain.evidenceIds} papers={papers} onCite={onCite} />
               </div>
               <p><CitationText text={pain.detail} papers={papers} onCite={onCite} /></p>
+              {pain.provenance && (
+                <div className={`gap-provenance ${pain.provenance.kind}`}>
+                  <div className="gap-provenance-head">
+                    <span className="gap-kind">{pain.provenance.label}</span>
+                    <span className={`gap-strength ${pain.provenance.strength}`}>
+                      {pain.provenance.strength === 'strong' ? '强证据' : pain.provenance.strength === 'medium' ? '中等证据' : '弱证据'}
+                    </span>
+                    <span className="gap-count-text">{pain.provenance.involvedCount}/{pain.provenance.paperCount} 篇相关</span>
+                  </div>
+                  <p>{pain.provenance.summary}</p>
+                  {pain.provenance.quotes.length > 0 && (
+                    <div className="gap-quotes">
+                      {pain.provenance.quotes.map(item => {
+                        const paper = paperById.get(item.paperId);
+                        return (
+                          <blockquote key={`${item.paperId}-${item.quote.slice(0, 24)}`}>
+                            <button
+                              type="button"
+                              className="gap-quote-cite"
+                              onClick={() => paper && onCite(paper)}
+                              disabled={!paper}
+                            >
+                              {item.paperId}
+                            </button>
+                            <span>“{item.quote}”</span>
+                          </blockquote>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
               {pain.opportunity && (
                 <div className="opportunity">
                   <span className="mono-label">研究切口</span>

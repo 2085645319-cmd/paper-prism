@@ -111,11 +111,30 @@ export interface BriefTheme {
   paperIds: string[];
 }
 
+export type GapProvenanceKind = 'author-stated' | 'cross-paper' | 'model-inferred';
+export type GapStrength = 'strong' | 'medium' | 'weak';
+
+export interface GapQuote {
+  paperId: string;
+  quote: string;
+}
+
+export interface GapProvenance {
+  kind: GapProvenanceKind;
+  label: string;
+  strength: GapStrength;
+  summary: string;
+  quotes: GapQuote[];
+  involvedCount: number;
+  paperCount: number;
+}
+
 export interface PainPoint {
   title: string;
   detail: string;
   evidenceIds: string[];
   opportunity: string;
+  provenance?: GapProvenance;
 }
 
 export interface FutureDirection {
