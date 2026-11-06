@@ -5,7 +5,7 @@ export const PAPER_COUNTS = [12, 18, 24, 30];
 export const DEFAULT_RESEARCH_OPTIONS = {
   yearPreset: 'recent5',
   maxPapers: 18,
-  requireAbstract: true,
+  abstractPolicy: 'prefer',
   includeClassics: false,
   sources: [...SOURCE_IDS]
 };
@@ -24,13 +24,16 @@ export function normalizeResearchOptions(input = {}) {
     ? input.sources.filter(source => SOURCE_IDS.includes(source))
     : [];
   const sources = requestedSources.length ? [...new Set(requestedSources)] : [...SOURCE_IDS];
+  const requestedPolicy = input?.abstractPolicy
+    || (input?.requireAbstract === true ? 'require' : input?.requireAbstract === false ? 'ignore' : 'prefer');
+  const abstractPolicy = ['prefer', 'require', 'ignore'].includes(requestedPolicy) ? requestedPolicy : 'prefer';
   const { yearFrom, yearTo } = yearRangeForPreset(yearPreset);
   return {
     yearPreset,
     yearFrom,
     yearTo,
     maxPapers,
-    requireAbstract: input?.requireAbstract !== false,
+    abstractPolicy,
     includeClassics: yearPreset === 'all' ? false : Boolean(input?.includeClassics),
     sources
   };

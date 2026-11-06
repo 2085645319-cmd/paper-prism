@@ -45,7 +45,7 @@ const DEMO = import.meta.env.MODE === 'demo' || new URLSearchParams(window.locat
 const DEFAULT_RESEARCH_OPTIONS: ResearchOptions = {
   yearPreset: 'recent5',
   maxPapers: 18,
-  requireAbstract: true,
+  abstractPolicy: 'prefer',
   includeClassics: false,
   sources: ['semanticscholar', 'doaj', 'crossref']
 };

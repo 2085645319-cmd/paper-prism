@@ -50,11 +50,12 @@ export interface RelatedPaper {
 }
 
 export type YearPreset = 'recent3' | 'recent5' | 'recent10' | 'all';
+export type AbstractPolicy = 'prefer' | 'require' | 'ignore';
 
 export interface ResearchOptions {
   yearPreset: YearPreset;
   maxPapers: number;
-  requireAbstract: boolean;
+  abstractPolicy: AbstractPolicy;
   includeClassics: boolean;
   sources: string[];
 }

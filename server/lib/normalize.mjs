@@ -108,26 +108,47 @@ export function mergePapers(rawPapers) {
   return [...byKey.values()];
 }
 
-function scorePaper(paper, terms) {
+function scorePaper(paper, terms, abstractWeight = 2.4) {
   const citations = Math.max(0, paper.citations || 0);
   const year = paper.year || 0;
   const currentYear = new Date().getFullYear();
   const age = year ? Math.max(0, currentYear - year) : 8;
-  // Evidence-first ranking: recent work and usable abstracts matter more than
-  // raw citation counts, which otherwise keep old papers at the top forever.
+  // Evidence-first ranking: abstract quality helps, but title relevance,
+  // citations, recency and source overlap keep metadata-only papers eligible.
   const recency = year ? Math.max(0, 4.4 - age * 0.38) : 0;
   const abstractLength = String(paper.abstract || '').trim().length;
   const abstract = abstractLength >= 80 ? Math.min(2.4, abstractLength / 800) : 0;
   const sources = paper.sources ? paper.sources.size : 1;
-  return Math.log1p(citations) * 1.05 + recency * 1.9 + abstract * 2.4 + Math.min(1.2, sources * 0.35) + relevance(paper, terms) * 2.6;
+  return Math.log1p(citations) * 1.05 + recency * 1.9 + abstract * abstractWeight + Math.min(1.2, sources * 0.35) + relevance(paper, terms) * 2.6;
 }
 
 function hasUsableAbstract(paper) {
   return String(paper.abstract || '').trim().length >= 80;
 }
 
-function isRecent(paper, currentYear = new Date().getFullYear()) {
-  return Boolean(paper.year) && currentYear - paper.year <= 5;
+function selectWithPolicy(pool, count, policy) {
+  if (count <= 0) return [];
+  if (policy === 'require') return pool.filter(hasUsableAbstract).slice(0, count);
+  if (policy === 'ignore') return pool.slice(0, count);
+
+  const withAbstract = pool.filter(hasUsableAbstract);
+  const withoutAbstract = pool.filter(paper => !hasUsableAbstract(paper));
+  const abstractTarget = Math.ceil(count * 0.7);
+  const selected = withAbstract.slice(0, abstractTarget);
+  const remaining = count - selected.length;
+  if (remaining > 0) {
+    selected.push(...withoutAbstract.slice(0, Math.min(remaining, count - abstractTarget)));
+  }
+  if (selected.length < count) {
+    const chosen = new Set(selected);
+    for (const paper of pool) {
+      if (selected.length >= count) break;
+      if (chosen.has(paper)) continue;
+      selected.push(paper);
+      chosen.add(paper);
+    }
+  }
+  return selected.slice(0, count);
 }
 
 export function rankAndSelect(rawPapers, max = 18, plan = null, options = {}) {
@@ -139,18 +160,20 @@ export function rankAndSelect(rawPapers, max = 18, plan = null, options = {}) {
   const yearPreset = options.yearPreset || 'recent5';
   const yearFrom = Number(options.yearFrom) || (yearPreset === 'all' ? 1900 : currentYear - 4);
   const yearTo = Number(options.yearTo) || currentYear;
-  const requireAbstract = options.requireAbstract === true;
+  const abstractPolicy = options.abstractPolicy
+    || (options.requireAbstract === true ? 'require' : options.requireAbstract === false ? 'ignore' : 'prefer');
+  const abstractWeight = abstractPolicy === 'require' ? 2.4 : abstractPolicy === 'ignore' ? 0.35 : 1.55;
   const includeClassics = options.includeClassics === true && yearPreset !== 'all';
   const requiredAnchors = Math.min(2, anchors.length);
 
   const scored = merged
-    .map(paper => ({ ...paper, _score: scorePaper(paper, terms) }))
+    .map(paper => ({ ...paper, _score: scorePaper(paper, terms, abstractWeight) }))
     .sort((a, b) => b._score - a._score);
 
   const inWindow = paper => Boolean(paper.year) && paper.year >= yearFrom && paper.year <= yearTo;
   const base = scored.filter(paper => {
     if (!inWindow(paper)) return false;
-    if (requireAbstract && !hasUsableAbstract(paper)) return false;
+    if (abstractPolicy === 'require' && !hasUsableAbstract(paper)) return false;
     return true;
   });
   const anchored = requiredAnchors
@@ -162,13 +185,13 @@ export function rankAndSelect(rawPapers, max = 18, plan = null, options = {}) {
     ? scored.filter(paper => {
         if (!paper.year || paper.year >= yearFrom) return false;
         if (paper.year < yearFrom - 20) return false;
-        if (requireAbstract && !hasUsableAbstract(paper)) return false;
+        if (abstractPolicy === 'require' && !hasUsableAbstract(paper)) return false;
         return !requiredAnchors || anchorHits(paper, anchors) >= requiredAnchors;
       }).slice(0, 2)
     : [];
 
   const recentSlots = Math.max(0, effectiveMax - classicPool.length);
-  const selected = pool.slice(0, recentSlots);
+  const selected = selectWithPolicy(pool, recentSlots, abstractPolicy);
   const chosen = new Set(selected);
   for (const paper of classicPool) {
     if (selected.length >= effectiveMax) break;

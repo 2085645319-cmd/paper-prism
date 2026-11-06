@@ -1,4 +1,4 @@
-import type { ResearchOptions, YearPreset } from '../types';
+import type { AbstractPolicy, ResearchOptions, YearPreset } from '../types';
 import { Icon } from './Icon';
 
 const YEAR_OPTIONS: Array<{ value: YearPreset; label: string; short: string; years: number }> = [
@@ -9,6 +9,18 @@ const YEAR_OPTIONS: Array<{ value: YearPreset; label: string; short: string; yea
 ];
 
 const COUNT_OPTIONS = [12, 18, 24, 30];
+
+const POLICY_OPTIONS: Array<{ value: AbstractPolicy; label: string; hint: string }> = [
+  { value: 'prefer', label: '优先摘要', hint: '摘要影响排序，无摘要也可入选' },
+  { value: 'require', label: '必须有摘要', hint: '只看有摘要的论文，覆盖更稳但可能更少' },
+  { value: 'ignore', label: '标题/元数据', hint: '不按摘要筛选，更看重标题、引用与来源' }
+];
+
+const POLICY_LABEL: Record<AbstractPolicy, string> = {
+  prefer: '优先摘要',
+  require: '必须有摘要',
+  ignore: '标题/元数据'
+};
 
 const SOURCE_OPTIONS = [
   { id: 'semanticscholar', label: 'Semantic Scholar' },
@@ -27,7 +39,7 @@ function summary(value: ResearchOptions) {
   const parts = [
     yearLabel(value.yearPreset),
     `${value.maxPapers} 篇`,
-    value.requireAbstract ? '必须有摘要' : '允许题录',
+    POLICY_LABEL[value.abstractPolicy],
     value.includeClassics && value.yearPreset !== 'all' ? '含 1–2 篇经典' : '',
     `${value.sources.length} 个来源`
   ].filter(Boolean);
@@ -100,16 +112,25 @@ export function ResearchSettings({
         <span className="settings-hint">最多 {value.maxPapers} 篇</span>
       </div>
 
+      <div className="settings-row settings-policy-row">
+        <span className="settings-label">摘要策略</span>
+        <div className="segmented">
+          {POLICY_OPTIONS.map(option => (
+            <button
+              type="button"
+              key={option.value}
+              className={value.abstractPolicy === option.value ? 'active' : ''}
+              onClick={() => set({ abstractPolicy: option.value })}
+              title={option.hint}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+        <span className="settings-hint">{POLICY_OPTIONS.find(option => option.value === value.abstractPolicy)?.hint}</span>
+      </div>
+
       <div className="settings-row settings-toggles">
-        <button
-          type="button"
-          className={`settings-switch ${value.requireAbstract ? 'on' : ''}`}
-          onClick={() => set({ requireAbstract: !value.requireAbstract })}
-          aria-pressed={value.requireAbstract}
-        >
-          <i />
-          必须有摘要
-        </button>
         <button
           type="button"
           className={`settings-switch ${value.includeClassics ? 'on' : ''}`}
