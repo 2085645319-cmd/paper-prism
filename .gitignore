@@ -10,3 +10,10 @@ artifacts/*
 !artifacts/results.png
 !artifacts/graph.png
 !artifacts/palette-research.png
+!artifacts/demo-brief.png
+!artifacts/demo-gap-provenance.png
+!artifacts/demo-matrix.png
+!artifacts/demo-running.png
+!artifacts/demo-papers.png
+!artifacts/demo-drawer.png
+!artifacts/demo-home.png

@@ -9,6 +9,7 @@ export function PapersView({
   onOpen,
   readingPath = [],
   fullMode = false,
+  matrixEnabled = false,
   analysis = null,
   coverage = null
 }: {
@@ -16,6 +17,7 @@ export function PapersView({
   onOpen: (paper: Paper) => void;
   readingPath?: string[];
   fullMode?: boolean;
+  matrixEnabled?: boolean;
   analysis?: Analysis | null;
   coverage?: number | null;
 }) {
@@ -86,7 +88,7 @@ export function PapersView({
         <button type="button" className={`toolbar-chip oa-toggle ${openOnly ? 'active' : ''}`} onClick={() => setOpenOnly(value => !value)}>
           <Icon name="check" size={12} /> 开放获取
         </button>
-        {fullMode && (
+        {matrixEnabled && (
           <div className="toolbar-group view-switch">
             <span className="mono-label">视图</span>
             <button type="button" className={`toolbar-chip ${view === 'cards' ? 'active' : ''}`} onClick={() => setView('cards')}>卡片</button>
@@ -96,7 +98,7 @@ export function PapersView({
         <span className="papers-count">{filtered.length}/{papers.length}</span>
       </div>
 
-      {fullMode && view === 'matrix' ? (
+      {matrixEnabled && view === 'matrix' ? (
         <EvidenceMatrix
           papers={filtered}
           analysis={analysis}

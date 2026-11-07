@@ -16,7 +16,7 @@ export const AGENT_STAGES = [
   { id: 'crossref', name: 'Crossref 检索', role: 'DOI 元数据', short: 'SCAN' },
   { id: 'analyst', name: '证据分析', role: '抽取论点与局限', short: 'READ' },
   { id: 'synthesizer', name: '综合编辑', role: '归纳主题与未解问题', short: 'SYNTH' },
-  { id: 'critic', name: '引用核查', role: '复核证据链', short: 'CHECK' }
+  { id: 'critic', name: '引用核查', role: '复核证据链与缺口来源', short: 'CHECK' }
 ];
 
 const CONFIDENCE_CN = { high: '高', medium: '中', low: '低' };

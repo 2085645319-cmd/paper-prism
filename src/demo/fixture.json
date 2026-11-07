@@ -797,7 +797,21 @@
           "P8",
           "P4"
         ],
-        "opportunity": "设计干预式忠实性测试：在推理链中注入错误证据或删除关键证据，观察预测是否随之改变，并报告忠实性指标与准确率的联合曲线。"
+        "opportunity": "设计干预式忠实性测试：在推理链中注入错误证据或删除关键证据，观察预测是否随之改变，并报告忠实性指标与准确率的联合曲线。",
+        "provenance": {
+          "kind": "author-stated",
+          "label": "作者自述",
+          "strength": "strong",
+          "summary": "来自 P8 的作者在摘要中明确提到的局限；点击编号可回到原文核对。",
+          "quotes": [
+            {
+              "paperId": "P8",
+              "quote": "Expert dermatologists rated its explanations as clear and clinically relevant; these ratings were obtained on class-level canonical exemplars rather than per-image reports."
+            }
+          ],
+          "involvedCount": 3,
+          "paperCount": 18
+        }
       },
       {
         "title": "对抗鲁棒性评估缺少统一威胁模型",
@@ -806,7 +820,16 @@
           "P4",
           "P5"
         ],
-        "opportunity": "为多模态临床与安全场景建立分层威胁模型（像素扰动、文本注入、跨模态错配、证据伪造），并在同一基准上报告各方法的失效模式。"
+        "opportunity": "为多模态临床与安全场景建立分层威胁模型（像素扰动、文本注入、跨模态错配、证据伪造），并在同一基准上报告各方法的失效模式。",
+        "provenance": {
+          "kind": "cross-paper",
+          "label": "跨论文空白",
+          "strength": "weak",
+          "summary": "综合当前 18 篇文献：2 篇与该问题相关，但没有一篇在摘要中把它明确列为自身局限。",
+          "quotes": [],
+          "involvedCount": 2,
+          "paperCount": 18
+        }
       },
       {
         "title": "跨领域可信推理评测协议缺失",
@@ -817,7 +840,16 @@
           "P9",
           "P11"
         ],
-        "opportunity": "构建一个多领域可信推理评测套件，统一报告忠实性、事实性、校准度与对抗鲁棒性四项指标，并公开评分脚本与失败案例库。"
+        "opportunity": "构建一个多领域可信推理评测套件，统一报告忠实性、事实性、校准度与对抗鲁棒性四项指标，并公开评分脚本与失败案例库。",
+        "provenance": {
+          "kind": "cross-paper",
+          "label": "跨论文空白",
+          "strength": "medium",
+          "summary": "综合当前 18 篇文献：4 篇与该问题相关，但没有一篇在摘要中把它明确列为自身局限。",
+          "quotes": [],
+          "involvedCount": 4,
+          "paperCount": 18
+        }
       },
       {
         "title": "多模态虚假信息检测缺乏可复现的方法证据",
@@ -826,7 +858,16 @@
           "P16",
           "P17"
         ],
-        "opportunity": "以公开多模态虚假信息数据集为基准，系统评测主流多模态大模型的检测与推理表现，并报告其解释理由与真实证据的一致性。"
+        "opportunity": "以公开多模态虚假信息数据集为基准，系统评测主流多模态大模型的检测与推理表现，并报告其解释理由与真实证据的一致性。",
+        "provenance": {
+          "kind": "cross-paper",
+          "label": "跨论文空白",
+          "strength": "weak",
+          "summary": "综合当前 18 篇文献：2 篇与该问题相关，但没有一篇在摘要中把它明确列为自身局限。",
+          "quotes": [],
+          "involvedCount": 2,
+          "paperCount": 18
+        }
       },
       {
         "title": "部分条目的证据不可用",
@@ -837,7 +878,16 @@
           "P16",
           "P17"
         ],
-        "opportunity": "在后续检索中优先补齐这些条目的全文或摘要，并核实P16与P17是否为同一工作的重复收录，避免重复计数影响证据权重。"
+        "opportunity": "在后续检索中优先补齐这些条目的全文或摘要，并核实P16与P17是否为同一工作的重复收录，避免重复计数影响证据权重。",
+        "provenance": {
+          "kind": "cross-paper",
+          "label": "跨论文空白",
+          "strength": "medium",
+          "summary": "综合当前 18 篇文献：4 篇与该问题相关，但没有一篇在摘要中把它明确列为自身局限。",
+          "quotes": [],
+          "involvedCount": 4,
+          "paperCount": 18
+        }
       }
     ],
     "futureDirections": [
@@ -1000,7 +1050,8 @@
     "durationMs": 12800,
     "model": "local-demo",
     "llm": true,
-    "generatedAt": "2026-11-02T09:00:00.000Z"
+    "generatedAt": "2026-11-02T09:00:00.000Z",
+    "updatedAt": "2026-11-07T08:31:58.844Z"
   },
   "demo": {
     "scenario": "研究生开题",

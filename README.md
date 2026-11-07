@@ -13,11 +13,20 @@
 
 ## Preview
 
-![PRISM literature brief](artifacts/results.png)
+![PRISM literature brief](artifacts/demo-brief.png)
 
-![PRISM knowledge graph](artifacts/graph.png)
+![PRISM gap provenance](artifacts/demo-gap-provenance.png)
 
-![PRISM command palette](artifacts/palette-research.png)
+![PRISM evidence matrix](artifacts/demo-matrix.png)
+
+## 最新迭代
+
+- **研究约束**：时间范围、论文数量、来源开关、保留经典，真正进入检索和排序
+- **摘要策略**：优先摘要 / 必须有摘要 / 标题元数据，不再把“有摘要”当成唯一门槛
+- **证据矩阵**：论文 × 方法 / 发现 / 局限 / 引用 / 来源，任意格子可查看摘要原句，支持 CSV 与 Markdown
+- **Gap Provenance**：每个未解问题标注“作者自述 / 跨论文空白 / 模型推断”；作者自述必须附逐字摘要原句，后端会校验原句确实存在于摘要
+- **对话补查**：围绕某个缺口继续检索近年或历史工作
+- **证据链导出**：Markdown 同时保留来源标签、原句与论文入口
 
 ## v0.2 前端升级
 
@@ -37,7 +46,9 @@
 
 - **核心主题**：3–5 条有论文证据的主题线，而不是摘要堆叠
 - **领域共识与分歧**：哪些结论已经被多篇论文支持，哪些仍在拉扯
-- **未解问题**：带证据编号的 pain points，以及可切入的 research angle
+- **未解问题**：带证据编号的 pain points、来源标签与研究切口
+- **缺口来源**：作者自述 / 跨论文空白 / 模型推断，作者自述附逐字原句
+- **证据矩阵**：把 12–30 篇论文压成可核对的对比表
 - **阅读路径**：按进入领域的顺序排好 5–7 篇关键论文
 - **原文入口**：每篇论文保留 DOI / 出版社 / 开放获取链接
 - **可导出简报**：一键导出 Markdown，直接进入写作、组会或 proposal
@@ -67,6 +78,10 @@
                           ▼
                  ┌─────────────────┐
                  │ Synthesis Editor│  主题、共识、分歧、未解问题、阅读路径
+                 └────────┬────────┘
+                          ▼
+                 ┌─────────────────┐
+                 │ Gap Provenance  │  作者自述 / 跨论文空白 / 模型推断
                  └────────┬────────┘
                           ▼
                  ┌─────────────────┐
@@ -148,7 +163,8 @@ Vite 开发地址是 `http://127.0.0.1:5173`，`/api` 会代理到 `127.0.0.1:87
 
 - 固定场景：研究生开题 · 多模态大模型的可信推理
 - 本地预置 18 篇文献、5 个主题、5 个未解问题、7 条阅读路径
-- 11 秒回放 Agent Mesh、运行遥测、简报、文献、图谱与轨迹
+- 预置缺口来源：1 个作者自述、4 个跨论文空白
+- 11 秒回放 Agent Mesh、运行遥测、简报、缺口来源、证据矩阵、文献、图谱与轨迹
 - 不请求 `/api`、不调用 DeepSeek、不消耗任何 API 额度
 - 构建命令：
 
@@ -202,7 +218,7 @@ paper-prism/
 | Method | Path | Purpose |
 |---|---|---|
 | `GET` | `/api/health` | LLM / source availability |
-| `POST` | `/api/research` | `{ "topic": "..." }` → `{ id }` |
+| `POST` | `/api/research` | `{ "topic": "...", "options": { ... } }` → `{ id }` |
 | `GET` | `/api/research/:id/events` | SSE event stream |
 | `GET` | `/api/research/:id` | snapshot (reconnect / debug) |
 
@@ -225,7 +241,7 @@ SSE event types: `stages`, `stage`, `plan`, `papers`, `analysis`, `brief`, `revi
 |---|---|
 | `⌘K` / `Ctrl+K` | Open command palette |
 | `/` | Focus research topic |
-| `1` `2` `3` `4` | Brief / Papers / Graph / Trace |
+| `1` `2` `3` `4` `5` | Brief / Papers / Graph / Trace / Chat |
 | `E` | Export current brief |
 | `N` | New research |
 | `Esc` | Close drawer / palette |
@@ -255,6 +271,9 @@ node scripts/mobile.mjs
 ## MVP 边界
 
 - 检索源是**元数据 + 摘要**，没有抓取 PDF 全文；对摘要缺失的文献只做标题级归类。
+- 研究约束（年份、篇数、来源、摘要策略）会进入检索与排序；保留经典是尽力保留。
+- Gap Provenance 的作者自述要求逐字原句校验；没有合格原句时会降级为“跨论文空白”或“模型推断”，不伪造作者表述。
+- 证据矩阵基于摘要中的方法、发现与局限，不等同于全文精读。
 - Semantic Scholar bulk 接口可能返回较大的响应；已设置超时、重试与 graceful fallback。
 - 没有用户系统、数据库和长期保存；每次运行是独立的内存任务。
 - 引用复核是**结构检查**（ID、阅读路径、摘要覆盖、来源广度），不是人工事实核查。
@@ -266,8 +285,8 @@ node scripts/mobile.mjs
 2. Semantic Scholar / OpenAlex API key 与引用图扩展
 3. Zotero / BibTeX / RIS 导入导出
 4. 会话持久化、项目空间与团队协作
-5. 多轮追问：针对某个 pain point 继续检索反证
-6. 评估集：用人工标注的 topic → gap 对照，量化摘要忠实度
+5. Claim Ledger：把证据矩阵升级成观点级的共识 / 争议 / 空白
+6. 评估集：用人工标注的 topic → gap 对照，量化摘要忠实度与缺口来源准确率
 
 ---
 

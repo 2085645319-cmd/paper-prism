@@ -739,6 +739,7 @@ export default function App() {
                     onOpen={setSelectedPaper}
                     readingPath={brief?.readingPath.map(item => item.paperId) || []}
                     fullMode={!DEMO}
+                    matrixEnabled
                     analysis={analysis}
                     coverage={quality?.abstractCoverage ?? null}
                   />
