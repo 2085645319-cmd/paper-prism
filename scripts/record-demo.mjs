@@ -72,7 +72,7 @@ async function titleCard() {
     <h1>PRISM 文献棱镜</h1>
     <div class="line"></div>
     <h2>面向论文写作的多智能体文献研究助手</h2>
-    <div class="meta">功能演示 · 约 1 分 40 秒</div>
+    <div class="meta">功能演示 · 约 1 分 45 秒</div>
   </div></body></html>`);
   await sleep(6000);
 }
@@ -160,6 +160,8 @@ await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
 await sleep(1200);
 await caption('从课题到可核验的文献简报，把研究过程变得可见');
 await sleep(5500);
+await caption('在线体验：https://prism-7z6p.onrender.com/demo/');
+await sleep(6500);
 await hideCaption();
 await sleep(600);
 

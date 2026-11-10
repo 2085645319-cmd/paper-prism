@@ -9,7 +9,9 @@
 
 **在线体验：** https://prism-7z6p.onrender.com
 
-**零成本原型 Demo：** https://2085645319-cmd.github.io/paper-prism/
+**零依赖在线体验版：** https://prism-7z6p.onrender.com/demo/
+
+**静态 Demo 备用入口：** https://2085645319-cmd.github.io/paper-prism/
 
 ## Preview
 

@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import express from 'express';
-import { CONFIG, DIST_DIR, hasLLM } from './config.mjs';
+import { CONFIG, DIST_DIR, ROOT, hasLLM } from './config.mjs';
 import { createJob, getJob } from './lib/jobs.mjs';
 import { normalizeResearchOptions } from './lib/researchOptions.mjs';
 import { runResearch } from './agents/orchestrator.mjs';
@@ -164,6 +164,13 @@ app.post('/api/translate', async (req, res) => {
 app.use('/api', (_req, res) => {
   res.status(404).json({ error: '接口不存在。' });
 });
+
+// Neutral, identity-free demo URL for review:
+// /demo/ serves the precomputed static fixture; it never calls the API.
+const DEMO_DIR = path.join(ROOT, 'docs');
+if (fs.existsSync(path.join(DEMO_DIR, 'index.html'))) {
+  app.use('/demo', express.static(DEMO_DIR, { maxAge: '1h', index: 'index.html' }));
+}
 
 if (fs.existsSync(path.join(DIST_DIR, 'index.html'))) {
   app.use(express.static(DIST_DIR, { maxAge: '1h', index: false }));

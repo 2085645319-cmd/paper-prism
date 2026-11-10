@@ -12,6 +12,7 @@ ENV HOST=0.0.0.0
 COPY package*.json ./
 RUN npm ci --omit=dev
 COPY --from=build /app/dist ./dist
+COPY --from=build /app/docs ./docs
 COPY server ./server
 EXPOSE 8790
 CMD ["node", "server/index.mjs"]
